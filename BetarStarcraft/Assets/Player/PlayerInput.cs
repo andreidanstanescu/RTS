@@ -27,6 +27,8 @@ public class PlayerInput : MonoBehaviour
 
             MouseCapture();
             //Roteste();
+
+            MouseControl();
         }
     }
 
@@ -44,22 +46,23 @@ public class PlayerInput : MonoBehaviour
         //y reprezinta inaltimea
 
         // DE REZOLVAT DIFERENTA DE VITEZA INTRE MISCAREA CAMEREI STANGA DREAPTA SI SUS JOS
-        if(currx <= totalx && currx > totalx - GameService.GetSenzitivity()) 
+        if(currx <= totalx && currx > totalx - GameService.GetSenzitivity()) {
+            //Debug.Log("misca");
             coords.x += GameService.SCROLL_DIM;
-        
-
-        if(currx >= 0 && currx < GameService.GetSenzitivity())
+        }
+        else if(currx >= 0 && currx < GameService.GetSenzitivity())
             coords.x -= GameService.SCROLL_DIM;
 
-        if(curry <= totaly + GameService.GetSenzitivity() && curry > totaly - GameService.GetSenzitivity()) 
-            coords.z += GameService.SCROLL_DIM;
-        
+        //fiind 2D template-ul, la noi va fi coords.y in loc de z (am setat camera pe orthographic)
 
-        if(curry >= 0 && curry < GameService.GetSenzitivity())
-            coords.z -= GameService.SCROLL_DIM;
+        if(curry <= totaly + GameService.GetSenzitivity() && curry > totaly - GameService.GetSenzitivity()) 
+            coords.y += GameService.SCROLL_DIM;
+        
+        else if(curry >= 0 && curry < GameService.GetSenzitivity())
+            coords.y -= GameService.SCROLL_DIM;
 
         coords = Camera.main.transform.TransformDirection(coords);
-        coords.y = 0;
+        //coords.y = 0;
 
         //coords.y -= GameService.SCROLL_DIM*UnityEngine.Input.GetAxis("Mouse ScrollWheel");
 
@@ -95,47 +98,108 @@ public class PlayerInput : MonoBehaviour
             dest.y = GameService.MIN_CAMERA_HEIGHT;
         }
 
-        if(dest != cadru)
+        if(dest != cadru){
+            //Debug.Log("diferit");
             Camera.main.transform.position = Vector3.MoveTowards(cadru, dest, Time.deltaTime * 20);
+        }
 
     }
     
-
-private void MouseCapture() {
-
-    bool lastPressed = lockMousePressed;
-    if(UnityEngine.Input.GetKey(KeyCode.LeftControl) && UnityEngine.Input.GetKey(KeyCode.Mouse0)) {
-        lastPressed = lockMousePressed;
-        lockMousePressed = true;
-    } else {
-        lockMousePressed = false;
+    private GameObject GetCurrentObject(){
+        Ray ray = Camera.main.ScreenPointToRay(UnityEngine.Input.mousePosition);
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit)) 
+            return hit.collider.gameObject;
+        return null;
     }
 
-    if(lastPressed == false && this.lockMousePressed == true) {
-        if(Cursor.lockState == CursorLockMode.None) {
-            Cursor.lockState = CursorLockMode.Confined;
-        }
-        else {
-            Cursor.lockState = CursorLockMode.None;
-        }
+    private Vector3 GetCollisionPoint() {
+        Ray ray = Camera.main.ScreenPointToRay(UnityEngine.Input.mousePosition);
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit)) 
+            return hit.point;
+        return GameService.OutOfBounds;
     }
 
-}
+    private void MouseCapture() {
 
-    //daca il conving pe bogdan sa-l facem 3D 
-    /*private void Roteste(){
-        Vector3 cadru = Camera.main.transform.eulerAngles;
-        Vector3 dest = cadru;
+        bool lastPressed = lockMousePressed;
+        if(UnityEngine.Input.GetKey(KeyCode.LeftControl) && UnityEngine.Input.GetKey(KeyCode.Mouse0)) {
+            lastPressed = lockMousePressed;
+            lockMousePressed = true;
+        } else {
+            lockMousePressed = false;
+        }
 
-        if(UnityEngine.Input.GetKey(KeyCode.LeftShift)) {
-            //Debug.Log("roteste");
-            dest.x -= UnityEngine.Input.GetAxis("Mouse Y") * GameService.RotateDim;
-            dest.y += UnityEngine.Input.GetAxis("Mouse X") * GameService.RotateDim;
+        if(lastPressed == false && this.lockMousePressed == true) {
+            if(Cursor.lockState == CursorLockMode.None) {
+                Cursor.lockState = CursorLockMode.Confined;
+            }
+            else {
+                Cursor.lockState = CursorLockMode.None;
+            }
         }
- 
-        //daca am rotit camera
-        if(dest != cadru) {
-            Camera.main.transform.eulerAngles = Vector3.MoveTowards(cadru, dest, Time.deltaTime * GameService.RotateSpeed);
+
+    }
+
+    private void MouseControl(){
+        if(UnityEngine.Input.GetMouseButtonDown(0))
+            MouseLeft();
+        else if (UnityEngine.Input.GetMouseButtonDown(1))
+            MouseRight();
+    }
+
+
+    private void MouseLeft(){
+
+        if(jucator.hud.InMouse()){
+            //aflu obiectul si punctul selectat
+            Vector3 point;
+            point = GetCollisionPoint();
+            GameObject gotoObject = GetCurrentObject();
+            if(point != GameService.OutOfBounds && gotoObject != null){
+                if(jucator.SelectedObject)
+                    jucator.SelectedObject.SelectedDo(gotoObject, point, jucator);
+                if(gotoObject.name == "Ground")
+                    return;
+                World worldObject = gotoObject.transform.root.GetComponent< World >();
+                if(worldObject == null)
+                    return;
+                jucator.SelectedObject = worldObject;
+                worldObject.SetSelection(true);
+            }
         }
-    }*/
-}
+
+    }
+
+    private void MouseRight(){
+
+        if(jucator.hud.InMouse()){
+            Vector3 point = GetCollisionPoint();
+            if(jucator.SelectedObject){
+                jucator.SelectedObject.SetSelection(false);
+                jucator.SelectedObject = null;
+            }
+        }
+
+    }
+
+
+
+        //daca il conving pe bogdan sa-l facem 3D 
+        /*private void Roteste(){
+            Vector3 cadru = Camera.main.transform.eulerAngles;
+            Vector3 dest = cadru;
+
+            if(UnityEngine.Input.GetKey(KeyCode.LeftShift)) {
+                //Debug.Log("roteste");
+                dest.x -= UnityEngine.Input.GetAxis("Mouse Y") * GameService.RotateDim;
+                dest.y += UnityEngine.Input.GetAxis("Mouse X") * GameService.RotateDim;
+            }
+    
+            //daca am rotit camera
+            if(dest != cadru) {
+                Camera.main.transform.eulerAngles = Vector3.MoveTowards(cadru, dest, Time.deltaTime * GameService.RotateSpeed);
+            }
+        }*/
+    }
