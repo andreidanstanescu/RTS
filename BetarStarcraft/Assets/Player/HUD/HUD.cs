@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RTS;
 
 public class HUD : MonoBehaviour
 {
-    public GUISkin resourceSkin, ordersSkin;
+    public GUISkin resourceSkin, ordersSkin, selectIcon;
 
     //CONSTANTE
     private const int ORDERS_BAR_WIDTH = 150, RESOURCE_BAR_HEIGHT = 40;
@@ -16,6 +17,7 @@ public class HUD : MonoBehaviour
     void Start()
     {
         player = transform.root.GetComponent< Player >();
+        GameService.setSkin(selectIcon);
         //Debug.Log(player.is_player);
     }
 
@@ -23,7 +25,7 @@ public class HUD : MonoBehaviour
     void OnGUI()
     {
         if(player.is_player) {
-            Debug.Log("da");
+            //Debug.Log("da");
             DrawOrdersBar();
             DrawResourcesBar();
         }
