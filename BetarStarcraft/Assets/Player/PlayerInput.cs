@@ -38,6 +38,7 @@ public class PlayerInput : MonoBehaviour
         float curry = UnityEngine.Input.mousePosition.y;
         float totalx = Screen.width;
         float totaly = Screen.height;
+        int miscat = 0;
 
         //creez un nou vector de coordonate
         //care reprezinta cu cat vreau sa ma deplasez pe mapa
@@ -49,17 +50,32 @@ public class PlayerInput : MonoBehaviour
         if(currx <= totalx && currx > totalx - GameService.GetSenzitivity()) {
             //Debug.Log("misca");
             coords.x += GameService.SCROLL_DIM;
+            GameService.changeCursor("misca");
+            jucator.hud.SetCustomCursor();
+            miscat = 1;
         }
-        else if(currx >= 0 && currx < GameService.GetSenzitivity())
+        else if(currx >= 0 && currx < GameService.GetSenzitivity()){
             coords.x -= GameService.SCROLL_DIM;
+            GameService.changeCursor("misca");
+            jucator.hud.SetCustomCursor();
+            miscat = 1;
+        }
 
         //fiind 2D template-ul, la noi va fi coords.y in loc de z (am setat camera pe orthographic)
 
-        if(curry <= totaly + GameService.GetSenzitivity() && curry > totaly - GameService.GetSenzitivity()) 
+        if(curry <= totaly + GameService.GetSenzitivity() && curry > totaly - GameService.GetSenzitivity()) {
             coords.y += GameService.SCROLL_DIM;
+            GameService.changeCursor("down");
+            jucator.hud.SetCustomCursor();
+            miscat = 2;
+        }
         
-        else if(curry >= 0 && curry < GameService.GetSenzitivity())
+        else if(curry >= 0 && curry < GameService.GetSenzitivity()){
             coords.y -= GameService.SCROLL_DIM;
+            GameService.changeCursor("down");
+            jucator.hud.SetCustomCursor();
+            miscat = 2;
+        }
 
         coords = Camera.main.transform.TransformDirection(coords);
         //coords.y = 0;
@@ -70,19 +86,28 @@ public class PlayerInput : MonoBehaviour
 
         if (UnityEngine.Input.GetAxis("Mouse ScrollWheel") < 0)
         {
+            GameService.changeCursor("misca");
+            jucator.hud.SetCustomCursor();
             if (Camera.main.fieldOfView <= GameService.MAX_FOV)
                 Camera.main.fieldOfView += GameService.DELTA_FOV;
             if (Camera.main.orthographicSize <= GameService.MAX_ORTOGRAPHIC_SIZE)
                 Camera.main.orthographicSize += GameService.DELTA_ORTOGRAPHIC_SIZE;
- 
+            GameService.changeCursor("misca");
+            jucator.hud.SetCustomCursor();
+            miscat = 1;
         }
 
         if (UnityEngine.Input.GetAxis("Mouse ScrollWheel") > 0)
         {
+            GameService.changeCursor("misca");
+            jucator.hud.SetCustomCursor();
             if (Camera.main.fieldOfView > GameService.MIN_FOV)
                 Camera.main.fieldOfView -= GameService.DELTA_FOV;
             if (Camera.main.orthographicSize >= GameService.MIN_ORTOGRAPHIC_SIZE)
                 Camera.main.orthographicSize -= GameService.DELTA_ORTOGRAPHIC_SIZE;
+            GameService.changeCursor("misca");
+            jucator.hud.SetCustomCursor();
+            miscat = 1;
         }
 
         Vector3 cadru = Camera.main.transform.position;
@@ -101,6 +126,25 @@ public class PlayerInput : MonoBehaviour
         if(dest != cadru){
             //Debug.Log("diferit");
             Camera.main.transform.position = Vector3.MoveTowards(cadru, dest, Time.deltaTime * 20);
+            /*if(miscat == 1){
+            GameService.changeCursor("misca");
+            jucator.hud.SetCustomCursor();
+            }
+            //GameService.changeCursor("select");
+            if(miscat == 2)
+            {
+                GameService.changeCursor("down");
+                jucator.hud.SetCustomCursor();
+            }*/
+        }
+
+        if(miscat == 0){
+            GameService.changeCursor("select");
+            jucator.hud.SetCustomCursor();
+        }
+        else{
+            GameService.changeCursor("misca");
+            jucator.hud.SetCustomCursor();
         }
 
     }

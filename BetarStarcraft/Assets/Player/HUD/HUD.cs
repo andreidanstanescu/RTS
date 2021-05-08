@@ -5,7 +5,60 @@ using RTS;
 
 public class HUD : MonoBehaviour
 {
-    public GUISkin resourceSkin, ordersSkin, selectIcon;
+    //skinurile afisate pe ecran
+    public GUISkin resourceSkin, ordersSkin, selectIcon, mouseSkin;
+
+    public Texture2D currentTexture;
+    public Texture2D attackCursor, moveCursor, selectCursor;
+
+    private CursorMode cursorMode = CursorMode.Auto;
+
+    public void UpdateMouse() {
+        if(!InMouse() && GameService.tipCursor != "misca")
+            Cursor.visible = true;
+        else{
+            Cursor.visible = false;
+            GUI.skin = mouseSkin;
+            GUI.BeginGroup(new Rect(0, 0, Screen.width - ORDERS_BAR_WIDTH, Screen.height - RESOURCE_BAR_HEIGHT));
+            Vector3 mousePlacement = Input.mousePosition;
+            SetCustomCursor();
+            //Debug.Log(Input.mousePosition.x);
+            float leftLabel = Input.mousePosition.x;
+            float topLabel = Screen.height - Input.mousePosition.y;
+            Debug.Log(topLabel);
+            if(topLabel > 385){
+                topLabel = 300;
+                //Debug.Log(Screen.height);
+            }
+            if(leftLabel > 890){
+                leftLabel = 700;
+                //Debug.Log(Screen.height);
+            }
+            float rightLabel = currentTexture.width;
+            print(leftLabel);
+            float bottomLabel = currentTexture.height;
+            GUI.Label(new Rect(leftLabel, topLabel, rightLabel, bottomLabel), currentTexture);
+            GUI.EndGroup();
+        }
+    }
+
+
+    public void SetCustomCursor(){
+        switch(GameService.tipCursor){
+            case "atac":
+                currentTexture = attackCursor;
+                break;
+            case "misca":
+                currentTexture = moveCursor;
+                break;
+            case "select":
+                currentTexture = selectCursor;
+                break;
+            default:
+                break;
+        }
+    }
+
 
     //CONSTANTE
     private const int ORDERS_BAR_WIDTH = 150, RESOURCE_BAR_HEIGHT = 40;
@@ -18,6 +71,7 @@ public class HUD : MonoBehaviour
     {
         player = transform.root.GetComponent< Player >();
         GameService.setSkin(selectIcon);
+        GameService.changeCursor("select");
         //Debug.Log(player.is_player);
     }
 
@@ -28,6 +82,7 @@ public class HUD : MonoBehaviour
             //Debug.Log("da");
             DrawOrdersBar();
             DrawResourcesBar();
+            UpdateMouse();
         }
     }
 

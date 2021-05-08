@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 //creez noul namespace pe care il voi folosi de peste tot din joc
 namespace RTS {
@@ -59,13 +60,31 @@ namespace RTS {
 
         public static int ORDERS_BAR_WIDTH = 150, RESOURCE_BAR_HEIGHT = 40;
 
+        //END_CONSTANTE
+
         public static GUISkin selectIcon;
         public static void setSkin(GUISkin other){
             selectIcon = other;
         }
 
-        //END_CONSTANTE
+        public static string tipCursor;
+        public static void changeCursor(string other){
+            tipCursor = other;
+        }
 
+        /*public struct TipCursor{
+            public TipCursor(double x, double y)
+            {
+                X = x;
+                Y = y;
+            }
+
+            public double X { get; }
+            public double Y { get; }
+
+            public override string ToString() => $"({X}, {Y})";
+
+        }*/
 
         public static float GetSenzitivity() {
             return senzitivity;
@@ -74,6 +93,8 @@ namespace RTS {
         public static void SetSenzitivity(float korean) {
             senzitivity = korean;
         }
+
+
 
         public static Rect getLimits(Bounds selectionLimits, Rect mapArea){
             //returneaza exact conturul obiectului, in limita ecranului vizibil
@@ -105,6 +126,7 @@ namespace RTS {
             raza_x = selectionLimits.center.x - selectionLimits.extents.x;
             raza_y = selectionLimits.center.y + selectionLimits.extents.y;
             raza_z = selectionLimits.center.z - selectionLimits.extents.z;
+            //totalBounds.Add(Camera.main.WorldToScreenPoint(new Vector3(Math.Max(0,raza_x), raza_y, raza_z)));
             totalBounds.Add(Camera.main.WorldToScreenPoint(new Vector3(raza_x, raza_y, raza_z)));
             raza_x = selectionLimits.center.x - selectionLimits.extents.x;
             raza_y = selectionLimits.center.y + selectionLimits.extents.y;
