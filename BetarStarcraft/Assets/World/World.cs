@@ -57,7 +57,7 @@ public class World : MonoBehaviour
     //obiectul deja selectat de player se va duce undeva
     public virtual void SelectedDo(GameObject destObject, Vector3 destPoint, Player parent){
         if(currentlySelected && destPoint != GameService.OutOfBounds && destObject.name != "Ground"){
-            World worldObject = destObject.transform.root.GetComponent< World >();
+            World worldObject = destObject.transform.parent.GetComponent< World >();
             if(worldObject)
                 iCanChangeTheWorld(worldObject, parent);
         }
@@ -90,6 +90,15 @@ public class World : MonoBehaviour
         GUI.BeginGroup(mapArea);
         GUI.Box(selectBox, "selectat");
         GUI.EndGroup();
+    }
+
+    public virtual void SetFlick(GameObject hoverObject) {
+        if(player && player.is_player && currentlySelected) {
+            if(hoverObject.name != "Ground") {
+                GameService.changeCursor("select");
+                player.hud.SetCustomCursor();
+            }
+        }
     }
 
 }

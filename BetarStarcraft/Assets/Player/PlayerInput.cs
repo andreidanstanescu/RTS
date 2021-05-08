@@ -191,6 +191,31 @@ public class PlayerInput : MonoBehaviour
             MouseLeft();
         else if (UnityEngine.Input.GetMouseButtonDown(1))
             MouseRight();
+        Flick();
+    }
+
+    private void Flick(){
+
+        if(jucator.hud.InMouse()){
+            //aflu obiectul si punctul selectat
+            GameObject gotoObject = GetCurrentObject();
+            if(gotoObject != null){
+                if(jucator.SelectedObject)
+                    jucator.SelectedObject.SetFlick(gotoObject);
+                if(gotoObject.name == "Ground")
+                    return;
+                Player alt_jucator = gotoObject.transform.parent.GetComponent< Player >();
+                if(alt_jucator == null || alt_jucator != jucator)
+                    return;
+                Building b = gotoObject.transform.parent.GetComponent< Building >();
+                Debug.Log(b.name);
+                if(b){
+                    GameService.changeCursor("select");
+                    alt_jucator.hud.SetCustomCursor();
+                }
+            }
+        }
+
     }
 
 
@@ -206,7 +231,7 @@ public class PlayerInput : MonoBehaviour
                     jucator.SelectedObject.SelectedDo(gotoObject, point, jucator);
                 if(gotoObject.name == "Ground")
                     return;
-                World worldObject = gotoObject.transform.root.GetComponent< World >();
+                World worldObject = gotoObject.transform.parent.GetComponent< World >();
                 if(worldObject == null)
                     return;
                 jucator.SelectedObject = worldObject;
