@@ -5,11 +5,17 @@ using RTS;
 
 public class HUD : MonoBehaviour
 {
+
+    private const int ICON_WIDTH = 32, ICON_HEIGHT = 32, TEXT_WIDTH = 100, TEXT_HEIGHT = 32;
     //skinurile afisate pe ecran
     public GUISkin resourceSkin, ordersSkin, selectIcon, mouseSkin;
 
+    public Dictionary<string, int> resurse;
+    public Dictionary<string, Texture2D> resourceTextures;
+
     public Texture2D currentTexture;
     public Texture2D attackCursor, moveCursor, selectCursor;
+    public Texture2D manaTexture, APTexture, ADTexture;
 
     private CursorMode cursorMode = CursorMode.Auto;
 
@@ -72,7 +78,35 @@ public class HUD : MonoBehaviour
         player = transform.root.GetComponent< Player >();
         GameService.setSkin(selectIcon);
         GameService.changeCursor("select");
+        resurse = new Dictionary<string, int>();
+        resourceTextures = new Dictionary<string, Texture2D>();
+        resurse.Add("mana", 100);
+        resurse.Add("AP", 0);
+        resurse.Add("AD", 100);
+        resurse.Add("max mana", 1000);
+        resurse.Add("max AP", 500);
+        resurse.Add("max AD", 1000);
         //Debug.Log(player.is_player);
+        getResourceTextures();
+    }
+
+    void getResourceTextures()
+    {
+        foreach(string r in resurse.Keys){
+            switch(r){
+            case "mana":
+                resourceTextures.Add("mana", manaTexture);
+                break;
+            case "AP":
+                resourceTextures.Add("AP", APTexture);
+                break;
+            case "AD":
+                resourceTextures.Add("AD", ADTexture);
+                break;
+            default:
+                break;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -100,11 +134,25 @@ public class HUD : MonoBehaviour
         GUI.EndGroup();
     }
 
+    private void DrawResourceIcon(string tip, int iconLeft, int textLeft, int topPos) {
+        Texture2D icon = resourceTextures[tip];
+        string text = resurse[tip].ToString() + "/" + resurse["max " + tip].ToString();
+        GUI.DrawTexture(new Rect(iconLeft, topPos, ICON_WIDTH, ICON_HEIGHT), icon);
+        GUI.Label (new Rect(textLeft, topPos, TEXT_WIDTH, TEXT_HEIGHT), text);
+    }
+
     private void DrawResourcesBar() {
         GUI.skin = resourceSkin;
-        GUI.BeginGroup(new Rect(0,0,Screen.width,RESOURCE_BAR_HEIGHT));
-
         GUI.Box(new Rect(0,0,Screen.width,RESOURCE_BAR_HEIGHT),"Resurse curente:");
+        GUI.BeginGroup(new Rect(0,0,Screen.width,RESOURCE_BAR_HEIGHT));
+        int topPos = 4, iconLeft = 4, textLeft = 20;
+        DrawResourceIcon("mana", iconLeft, textLeft, topPos);
+        iconLeft += TEXT_WIDTH;
+        textLeft += TEXT_WIDTH;
+        DrawResourceIcon("AP", iconLeft, textLeft, topPos);
+        iconLeft += TEXT_WIDTH;
+        textLeft += TEXT_WIDTH;
+        DrawResourceIcon("AD", iconLeft, textLeft, topPos);
         GUI.EndGroup();
     }
 
@@ -115,4 +163,10 @@ public class HUD : MonoBehaviour
         return (currx >= 0 && currx <= Screen.width-ORDERS_BAR_WIDTH &&
         curry >= 0 && curry <= Screen.height-RESOURCE_BAR_HEIGHT);
     }
+
+    public void updateResources(Dictionary<string, int> r){
+        this.resurse = r;
+    }
+
+
 }

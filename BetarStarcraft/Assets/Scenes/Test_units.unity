@@ -1877,3 +1877,6 @@ MonoBehaviour:
   attackCursor: {fileID: 2800000, guid: af0d358d113141d408871a69adf294ac, type: 3}
   moveCursor: {fileID: 2800000, guid: 8fc7eb3462f42234084bdf916da7b154, type: 3}
   selectCursor: {fileID: 2800000, guid: fadf7810d13399e46a77208354270fd9, type: 3}
+  manaTexture: {fileID: 2800000, guid: 17f431226a647c04592a6089b549f7fd, type: 3}
+  APTexture: {fileID: 2800000, guid: ad2eb587c19bcfa4cb200c1eb30fe555, type: 3}
+  ADTexture: {fileID: 2800000, guid: 4e4d2150f9c2ce0438e0f2c5c9406ebc, type: 3}
