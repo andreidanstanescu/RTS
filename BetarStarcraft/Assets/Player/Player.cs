@@ -43,4 +43,8 @@ public class Player : MonoBehaviour
             this.hud.updateResources(resurse);
         }
     }
+
+    public void AddUnit(string unitName, Vector3 spawnPoint, Quaternion rotation) {
+        Debug.Log("add " + unitName + " to player");
+    }
 }
