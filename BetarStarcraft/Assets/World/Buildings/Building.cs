@@ -13,8 +13,8 @@ public class Building : World
 
     protected override void Awake() {
         buildQueue = new Queue<string>();
-        float spawnX = selectionBounds.center.x + transform.forward.x * selectionBounds.extents.x + transform.forward.x * 10;
-        float spawnZ = selectionBounds.center.z + transform.forward.z + selectionBounds.extents.z + transform.forward.z * 10;
+        float spawnX = selectionLimits.center.x + transform.forward.x * selectionLimits.extents.x + transform.forward.x * 10;
+        float spawnZ = selectionLimits.center.z + transform.forward.z + selectionLimits.extents.z + transform.forward.z * 10;
         spawnPoint = new Vector3(spawnX, 0.0f, spawnZ);
         base.Awake();
     }
@@ -70,7 +70,7 @@ public class Building : World
 
     protected void ProcessBuildQueue() {
         if (buildQueue.Count > 0) {
-            currentBuildProgress += Time.deltaTime * ResourceManager.BuildSpeed;
+            currentBuildProgress += Time.deltaTime * GameService.BuildSpeed;
             if (currentBuildProgress > maxBuildProgress) {
                 if (player) player.AddUnit(buildQueue.Dequeue(), spawnPoint, transform.rotation);
                 currentBuildProgress = 0.0f;

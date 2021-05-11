@@ -58,6 +58,8 @@ namespace RTS {
         public static Vector3 OutOfBounds { get { return PU; } }
         public static Bounds NotInBounds { get { return BPU; }}
 
+        public static int BuildSpeed { get { return 2; } }
+
         public static int getSpeedMovement { get { return 1; }}
 
         public static int ORDERS_BAR_WIDTH = 150, RESOURCE_BAR_HEIGHT = 40;
