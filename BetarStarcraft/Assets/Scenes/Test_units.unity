@@ -174,7 +174,6 @@ MonoBehaviour:
   name: Tureta
   image: {fileID: 0}
   cost: 0
-  sellValue: 0
   hitPoints: 0
   maxHitPoints: 0
 --- !u!1 &112890364
@@ -1413,11 +1412,12 @@ MonoBehaviour:
   name: Caramida
   image: {fileID: 0}
   cost: 0
-  sellValue: 0
   hitPoints: 0
   maxHitPoints: 0
   maxBuildProgress: 10
   created: 0
+  sellValue: 0
+  sellImage: {fileID: 0}
 --- !u!1 &2046416594
 GameObject:
   m_ObjectHideFlags: 0
@@ -1625,6 +1625,8 @@ MonoBehaviour:
   buttonClick: {fileID: 0}
   buildFrame: {fileID: 2800000, guid: f359084b7143e0b459229a75cea2a082, type: 3}
   buildMask: {fileID: 2800000, guid: d68330ac923f35341ae393d1ad227b85, type: 3}
+  smallButtonHover: {fileID: 0}
+  smallButtonClick: {fileID: 0}
 --- !u!1 &2121073548
 GameObject:
   m_ObjectHideFlags: 0
@@ -1735,6 +1737,14 @@ PrefabInstance:
       propertyPath: image
       value: 
       objectReference: {fileID: 2800000, guid: a4ac576e0e3743e4eb071f9e181e8f38, type: 3}
+    - target: {fileID: 3869797302792278992, guid: 6ba2223f7fad4c74b936bd4935d47e97, type: 3}
+      propertyPath: sellImage
+      value: 
+      objectReference: {fileID: 2800000, guid: 6998f5436cc48c544932eb5b3ca1f916, type: 3}
+    - target: {fileID: 3869797302792278992, guid: 6ba2223f7fad4c74b936bd4935d47e97, type: 3}
+      propertyPath: sellValue
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 7504277668121676056, guid: 6ba2223f7fad4c74b936bd4935d47e97, type: 3}
       propertyPath: m_RootOrder
       value: 2

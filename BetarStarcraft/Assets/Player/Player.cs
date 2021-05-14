@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
         newUnit.transform.parent = player.transform;*/
     }
 
-    void addResurse(string tip, int val)
+    public void addResurse(string tip, int val)
     {
         try{
             resurse[tip] += val;

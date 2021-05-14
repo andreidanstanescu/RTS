@@ -7,7 +7,7 @@ public class World : MonoBehaviour
 {
     public string name;
     public Texture2D image;
-    public int cost, sellValue, hitPoints, maxHitPoints;
+    public int cost, hitPoints, maxHitPoints;
 
     protected Player player;
     protected string[] actions = {};

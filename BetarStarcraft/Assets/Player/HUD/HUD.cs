@@ -27,6 +27,7 @@ public class HUD : MonoBehaviour
     public Texture2D manaTexture, APTexture, ADTexture;
     public Texture2D buttonHover, buttonClick;
     public Texture2D buildFrame, buildMask;
+    public Texture2D smallButtonHover, smallButtonClick;
 
     private CursorMode cursorMode = CursorMode.Auto;
 
@@ -153,6 +154,7 @@ public class HUD : MonoBehaviour
                 lastSelection = player.SelectedObject;
                 Building selectedBuilding = lastSelection.GetComponent< Building >();
                 if(selectedBuilding) {
+                    DrawStandardBuildingOptions(selectedBuilding);
                     DrawBuildQueue(selectedBuilding.getBuildQueueValues(), selectedBuilding.getBuildPercentage());
                 }
             }
@@ -253,6 +255,23 @@ public class HUD : MonoBehaviour
             }
         }
         GUI.EndGroup();
+    }
+
+    private void DrawStandardBuildingOptions(Building building){
+        GUIStyle buttons = new GUIStyle();
+		buttons.hover.background = smallButtonHover;
+		buttons.active.background = smallButtonClick;
+		GUI.skin.button = buttons;
+		int leftPos = BUILD_IMAGE_WIDTH + SCROLL_BAR_WIDTH + BUTTON_SPACING;
+		int topPos = buildAreaHeight - BUILD_IMAGE_HEIGHT / 2;
+		int width = BUILD_IMAGE_WIDTH / 2;
+		int height = BUILD_IMAGE_HEIGHT / 2;
+        leftPos += width + BUTTON_SPACING;
+        Debug.Log("buton");
+        if(GUI.Button(new Rect(leftPos, topPos, width, height), building.sellImage)) {
+            building.Sell();
+        }
+
     }
 
     public bool InMouse() {

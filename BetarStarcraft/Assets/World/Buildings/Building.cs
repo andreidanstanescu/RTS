@@ -14,6 +14,8 @@ public class Building : World
     private float dx = 1.0f;
     public bool created = false;
     protected Vector3 flagPosition;
+    public int sellValue = 100;
+    public Texture2D sellImage;
 
     protected override void Awake() {
         base.Awake();
@@ -131,6 +133,13 @@ public class Building : World
 
     public float getBuildPercentage() {
         return currentBuildProgress / maxBuildProgress;
+    }
+
+    public void Sell() {
+        if(player) player.addResurse("mana", sellValue);
+        if(currentlySelected) 
+            SetSelection(false);
+        Destroy(this.gameObject);
     }
 
 }
