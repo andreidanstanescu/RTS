@@ -27,6 +27,7 @@ public class World : MonoBehaviour
     
     protected virtual void Start () {
         player = transform.root.GetComponentInChildren< Player >();
+        actions = new string[GameService.ACTION_LIMITS];
     }
     
     protected virtual void Update () {
@@ -41,12 +42,20 @@ public class World : MonoBehaviour
         }
     }
 
-    public void SetSelection(bool selected) {
+    public virtual void SetSelection(bool selected) {
         currentlySelected = selected;
     }
 
     public string[] GetActions() {
         return actions;
+    }
+
+    public bool IsOwnedBy(Player owner) {
+        if(player && player.Equals(owner)) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     public virtual void PerformAction(string actionToPerform) {

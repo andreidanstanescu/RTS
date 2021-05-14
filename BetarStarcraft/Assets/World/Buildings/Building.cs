@@ -6,17 +6,26 @@ using RTS;
 public class Building : World
 {
     public float maxBuildProgress = 10;
-    protected Queue<string> buildQueue;
+    private float frameTime = 0.01f;
+    protected Queue< string > buildQueue;
     private float currentBuildProgress = 0.0f;
     private Vector3 spawnPoint;
-
+    private Vector3 initialPoint;
+    private float dx = 1.0f;
+    public bool created = false;
+    protected Vector3 flagPosition;
 
     protected override void Awake() {
+        base.Awake();
         buildQueue = new Queue<string>();
         float spawnX = selectionLimits.center.x + transform.forward.x * selectionLimits.extents.x + transform.forward.x * 10;
         float spawnZ = selectionLimits.center.z + transform.forward.z + selectionLimits.extents.z + transform.forward.z * 10;
         spawnPoint = new Vector3(spawnX, 0.0f, spawnZ);
-        base.Awake();
+        flagPosition = new Vector3(selectionLimits.center.x, 0.0f, selectionLimits.center.z);
+    }
+
+    private void UpdateSpawnPoint(){
+        spawnPoint.x += dx;
     }
     
     protected override void Start () {
@@ -24,12 +33,39 @@ public class Building : World
     }
     
     protected override void Update () {
-        ProcessBuildQueue();
         base.Update();
+        //CreateUnit("Tureta");
+        //Debug.Log(buildQueue.Count);
+        //Debug.Log(created);
+        if(buildQueue.Count > 0)
+            ProcessBuildQueue();
     }
     
     protected override void OnGUI() {
         base.OnGUI();
+    }
+
+    public override void SetSelection(bool selected) {
+        base.SetSelection(selected);
+        if(player) {
+            Flag flag = player.GetComponentInChildren< Flag >();
+            //Debug.Log(selected);
+            if(selected) {
+                //Debug.Log(player.is_player);
+                if(flag && player.is_player && spawnPoint != GameService.OutOfBounds && flagPosition != GameService.OutOfBounds) {
+                    
+                    Debug.Log(flagPosition.z);
+                    //flag.transform.position = Camera.main.WorldToScreenPoint(flagPosition);
+                    flag.transform.position = flagPosition;
+                    flag.transform.forward = transform.forward;
+                    //flag.SetActive(true);
+                    flag.Enable();
+                }
+            } else {
+                if(flag && player.is_player) 
+                    flag.Disable();
+            }
+        }
     }
 
     public override void SetFlick(GameObject hoverObject) {
@@ -65,23 +101,31 @@ public class Building : World
     }
 
     protected void CreateUnit(string unitName){
+        //Debug.Log(buildQueue.Count);
         buildQueue.Enqueue(unitName);
+        //Debug.Log(getBuildQueueValues());
+        created = true;
     }
 
     protected void ProcessBuildQueue() {
-        if (buildQueue.Count > 0) {
-            currentBuildProgress += Time.deltaTime * GameService.BuildSpeed;
-            if (currentBuildProgress > maxBuildProgress) {
-                if (player) player.AddUnit(buildQueue.Dequeue(), spawnPoint, transform.rotation);
-                currentBuildProgress = 0.0f;
+        //Debug.Log(buildQueue.Count);
+        //Debug.Log("produce");
+        currentBuildProgress += frameTime * GameService.BuildSpeed;
+        if (currentBuildProgress > maxBuildProgress) {
+            Debug.Log("produce");
+            if (player) {
+                player.AddUnit(buildQueue.Dequeue(), spawnPoint, transform.rotation);
+                UpdateSpawnPoint();
             }
+            currentBuildProgress = 0.0f;
         }
     }
 
     public string[] getBuildQueueValues() {
         string[] values = new string[buildQueue.Count];
         int pos = 0;
-        foreach (string unit in buildQueue) values[pos++] = unit;
+        foreach (string unit in buildQueue) 
+            values[pos++] = unit;
         return values;
     }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RTS;
 
 public class Player : MonoBehaviour
 {
@@ -22,6 +23,10 @@ public class Player : MonoBehaviour
         resurse.Add("max mana", 3000);
         resurse.Add("max AP", 500);
         resurse.Add("max AD", 1000);
+        /*Debug.Log("add flag to player");
+        Flag f = GetComponentInChildren< Flag >();
+        GameObject newUnit = (GameObject)Instantiate(GameService.extractVehicle(unitName), spawnPoint, rotation);
+        newUnit.transform.parent = player.transform;*/
     }
 
     void addResurse(string tip, int val)
@@ -46,5 +51,8 @@ public class Player : MonoBehaviour
 
     public void AddUnit(string unitName, Vector3 spawnPoint, Quaternion rotation) {
         Debug.Log("add " + unitName + " to player");
+        PrefabVehicle v = GetComponentInChildren< PrefabVehicle >();
+        GameObject newUnit = (GameObject)Instantiate(GameService.extractVehicle(unitName), spawnPoint, rotation);
+        newUnit.transform.parent = v.transform;
     }
 }

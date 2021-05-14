@@ -49,6 +49,7 @@ namespace RTS {
         public static float DELTA_ORTOGRAPHIC_SIZE { get {return 0.5f; } }
         public static float MIN_CAMERA_HEIGHT { get { return 10; } }
         public static float MAX_CAMERA_HEIGHT { get { return 40; } }
+        public static int ACTION_LIMITS { get { return 100; }}
 
         public static Vector3 PU = new Vector3(-1e5f, -1e5f, -1e5f);
         public static Vector3 Origin = new Vector3(0f,0f,0f);
@@ -63,6 +64,8 @@ namespace RTS {
         public static int getSpeedMovement { get { return 1; }}
 
         public static int ORDERS_BAR_WIDTH = 150, RESOURCE_BAR_HEIGHT = 40;
+
+        public static Prefabs playObjects = null;
 
         //END_CONSTANTE
 
@@ -98,6 +101,26 @@ namespace RTS {
             senzitivity = korean;
         }
 
+        public static void setCurrentObjects(Prefabs other){
+            playObjects = other;
+        }
+
+        public static GameObject extractBuilding(string name) {
+            return playObjects.extractBuilding(name);
+        }
+        
+        public static GameObject extractVehicle(string name) {
+            return playObjects.extractVehicle(name);
+        }
+        
+        public static GameObject extractWorldObject(string name) {
+            return playObjects.extractWorldObject(name);
+        }
+        
+        public static Texture2D extractImage(string name) {
+            //Debug.Log(playObjects.exists);
+            return playObjects.extractImage(name);
+        }
 
 
         public static Rect getLimits(Bounds selectionLimits, Rect mapArea){

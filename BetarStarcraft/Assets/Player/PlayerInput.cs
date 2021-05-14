@@ -205,6 +205,8 @@ public class PlayerInput : MonoBehaviour
                 if(gotoObject.name == "Ground")
                     return;
                 Player alt_jucator = gotoObject.transform.parent.GetComponent< Player >();
+                //aparent da eroare chiar daca e null
+                //o sa il adaug drept Child Component direct din Unity la final
                 if(alt_jucator == null || alt_jucator != jucator)
                     return;
                 Building b = gotoObject.transform.parent.GetComponent< Building >();
