@@ -13,6 +13,6 @@ public class Turret : Vehicle
     // Update is called once per frame
     void Update()
     {
-        
+        base.Update();
     }
 }

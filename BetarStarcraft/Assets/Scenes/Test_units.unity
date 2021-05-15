@@ -147,17 +147,17 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2536192}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -20, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2, y: -0.5, z: 2}
+  m_LocalScale: {x: 0.1, y: 0.25, z: 0.1}
   m_Children:
   - {fileID: 2053559146}
   - {fileID: 311895770}
   - {fileID: 729956862}
   - {fileID: 1636518301}
   - {fileID: 1905090448}
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 1745000555}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2536194
 MonoBehaviour:
@@ -1155,6 +1155,7 @@ Transform:
   - {fileID: 1716993649}
   - {fileID: 1663281908}
   - {fileID: 252135387}
+  - {fileID: 2536193}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1418,6 +1419,7 @@ MonoBehaviour:
   created: 0
   sellValue: 0
   sellImage: {fileID: 0}
+  rallyPointImage: {fileID: 0}
 --- !u!1 &2046416594
 GameObject:
   m_ObjectHideFlags: 0
@@ -1465,7 +1467,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2053559145
 GameObject:
@@ -1618,11 +1620,12 @@ MonoBehaviour:
   attackCursor: {fileID: 2800000, guid: af0d358d113141d408871a69adf294ac, type: 3}
   moveCursor: {fileID: 2800000, guid: 8fc7eb3462f42234084bdf916da7b154, type: 3}
   selectCursor: {fileID: 2800000, guid: fadf7810d13399e46a77208354270fd9, type: 3}
+  rallyPointCursor: {fileID: 2800000, guid: c72eef081d8c5c442bd49932f03f26c3, type: 3}
   manaTexture: {fileID: 2800000, guid: 17f431226a647c04592a6089b549f7fd, type: 3}
   APTexture: {fileID: 2800000, guid: ad2eb587c19bcfa4cb200c1eb30fe555, type: 3}
   ADTexture: {fileID: 2800000, guid: 4e4d2150f9c2ce0438e0f2c5c9406ebc, type: 3}
-  buttonHover: {fileID: 0}
-  buttonClick: {fileID: 0}
+  buttonHover: {fileID: 2800000, guid: bb66454fe97343a48b84062a40965f38, type: 3}
+  buttonClick: {fileID: 2800000, guid: 126e95612b0197a4187632034788f2ce, type: 3}
   buildFrame: {fileID: 2800000, guid: f359084b7143e0b459229a75cea2a082, type: 3}
   buildMask: {fileID: 2800000, guid: d68330ac923f35341ae393d1ad227b85, type: 3}
   smallButtonHover: {fileID: 0}
@@ -1745,6 +1748,10 @@ PrefabInstance:
       propertyPath: sellValue
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 3869797302792278992, guid: 6ba2223f7fad4c74b936bd4935d47e97, type: 3}
+      propertyPath: rallyPointImage
+      value: 
+      objectReference: {fileID: 2800000, guid: fbd71debc16c3b5489da96502b65a2c2, type: 3}
     - target: {fileID: 7504277668121676056, guid: 6ba2223f7fad4c74b936bd4935d47e97, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1820,7 +1827,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8596702106851831227, guid: fe3f3ed91b1d64d488a83955aae96658, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8596702106851831227, guid: fe3f3ed91b1d64d488a83955aae96658, type: 3}
       propertyPath: m_LocalPosition.x

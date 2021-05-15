@@ -16,6 +16,7 @@ public class Building : World
     protected Vector3 flagPosition;
     public int sellValue = 100;
     public Texture2D sellImage;
+    public Texture2D rallyPointImage;
 
     protected override void Awake() {
         base.Awake();
@@ -74,6 +75,10 @@ public class Building : World
         if(player && player.is_player && currentlySelected) {
             if(hoverObject.name != "Ground") {
                 GameService.changeCursor("atac");
+                if(player.hud.GetPreviousCursorState() == "flag") {
+                    GameService.changeCursor("flag");
+                    //player.hud.SetCustomCursor();
+                }
                 player.hud.SetCustomCursor();
             }
         }
@@ -83,10 +88,23 @@ public class Building : World
         return (destObject.name == "Ground");
     }
 
-    public override void SelectedDo(GameObject destObject, Vector3 destPoint, Player parent){
-        base.SelectedDo(destObject, destPoint, parent);
+    public bool hasSpawnPoint() {
+        return spawnPoint != GameService.OutOfBounds && flagPosition != GameService.OutOfBounds;
+    }
+
+
+    public void SetRallyPoint(Vector3 position) {
+        flagPosition = position;
+        if(player && player.is_player && currentlySelected) {
+            Flag flag = player.GetComponentInChildren< Flag >();
+            if(flag) flag.transform.position = flagPosition;
+        }
+    }
+
+    public override void SelectedDo(GameObject destObject, Vector3 hitObject, Player player){
+        base.SelectedDo(destObject, hitObject, player);
         //mutam cladirea altundeva
-        if(currentlySelected && destPoint != GameService.OutOfBounds && free(destObject)){
+        /*if(currentlySelected && destPoint != GameService.OutOfBounds && free(destObject)){
             float x = destPoint.x;
             //makes sure that the unit stays on top of the surface it is on
             float y = destPoint.y + player.SelectedObject.transform.position.y;
@@ -99,7 +117,16 @@ public class Building : World
                     moving = false;
             }
             base.getLimits();
+        }*/
+
+        if(player && player.is_player && currentlySelected) {
+            if(destObject.name == "Ground") {
+                if((GameService.tipCursor == "flag" || player.hud.GetPreviousCursorState() == "flag") && hitObject != GameService.OutOfBounds) {
+                    SetRallyPoint(hitObject);
+                }
+            }
         }
+
     }
 
     protected void CreateUnit(string unitName){
@@ -116,7 +143,7 @@ public class Building : World
         if (currentBuildProgress > maxBuildProgress) {
             Debug.Log("produce");
             if (player) {
-                player.AddUnit(buildQueue.Dequeue(), spawnPoint, transform.rotation);
+                player.AddUnit(buildQueue.Dequeue(), spawnPoint, flagPosition, transform.rotation);
                 UpdateSpawnPoint();
             }
             currentBuildProgress = 0.0f;

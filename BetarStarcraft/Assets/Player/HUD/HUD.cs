@@ -23,9 +23,13 @@ public class HUD : MonoBehaviour
     public Dictionary<string, Texture2D> resourceTextures;
 
     public Texture2D currentTexture;
-    public Texture2D attackCursor, moveCursor, selectCursor;
+    public Texture2D attackCursor, moveCursor, selectCursor;	
+    public Texture2D rallyPointCursor;
     public Texture2D manaTexture, APTexture, ADTexture;
     public Texture2D buttonHover, buttonClick;
+
+    private string previousCursorState;
+    
     public Texture2D buildFrame, buildMask;
     public Texture2D smallButtonHover, smallButtonClick;
 
@@ -33,6 +37,8 @@ public class HUD : MonoBehaviour
 
     private World lastSelection;
     private float sliderValue;
+
+    int pressed = 0;
 
     public void UpdateMouse() {
         if(!InMouse() && GameService.tipCursor != "misca")
@@ -46,6 +52,8 @@ public class HUD : MonoBehaviour
             //Debug.Log(Input.mousePosition.x);
             float leftLabel = Input.mousePosition.x;
             float topLabel = Screen.height - Input.mousePosition.y;
+            if(currentTexture == rallyPointCursor) 
+                topLabel -= currentTexture.height;
             //Debug.Log(topLabel);
             if(topLabel > 385){
                 topLabel = 300;
@@ -63,8 +71,14 @@ public class HUD : MonoBehaviour
         }
     }
 
+    public string GetPreviousCursorState() {
+        return previousCursorState;
+    }
+
 
     public void SetCustomCursor(){
+        if(GameService.tipCursor != previousCursorState)
+            previousCursorState = GameService.tipCursor;
         switch(GameService.tipCursor){
             case "atac":
                 currentTexture = attackCursor;
@@ -75,11 +89,15 @@ public class HUD : MonoBehaviour
             case "select":
                 currentTexture = selectCursor;
                 break;
+            case "flag":
+                currentTexture = rallyPointCursor;
+                break;
             default:
                 break;
         }
+        if(pressed == 1)
+            currentTexture = rallyPointCursor;
     }
-
 
     //este acum componenta fiu al lui Player in ierarhie
     private Player player;
@@ -257,6 +275,7 @@ public class HUD : MonoBehaviour
         GUI.EndGroup();
     }
 
+
     private void DrawStandardBuildingOptions(Building building){
         GUIStyle buttons = new GUIStyle();
 		buttons.hover.background = smallButtonHover;
@@ -266,10 +285,31 @@ public class HUD : MonoBehaviour
 		int topPos = buildAreaHeight - BUILD_IMAGE_HEIGHT / 2;
 		int width = BUILD_IMAGE_WIDTH / 2;
 		int height = BUILD_IMAGE_HEIGHT / 2;
-        leftPos += width + BUTTON_SPACING;
-        Debug.Log("buton");
+        //leftPos += width + BUTTON_SPACING;
+
         if(GUI.Button(new Rect(leftPos, topPos, width, height), building.sellImage)) {
             building.Sell();
+        }
+
+        //Debug.Log("buton");
+        if(building.hasSpawnPoint()) {
+            
+            leftPos += width + BUTTON_SPACING;
+            //Debug.Log("schimba in flag");
+            //GameService.changeCursor("flag");
+            //SetCustomCursor();
+            if(GUI.Button(new Rect(leftPos, topPos, width, height), building.rallyPointImage)) {
+                pressed = 1 - pressed;
+                if(currentTexture != rallyPointCursor && previousCursorState != "flag") {
+                    Debug.Log("schimba in flag");
+                    GameService.changeCursor("flag");
+                    SetCustomCursor();
+                }
+                else {
+                    GameService.changeCursor("select");
+                    SetCustomCursor();
+                }
+            }
         }
 
     }
