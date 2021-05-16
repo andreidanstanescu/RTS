@@ -101,4 +101,7 @@ public class World : MonoBehaviour
         }
     }
 
+    public Bounds GetSelectionBounds() {
+        return selectionLimits;
+    }
 }
