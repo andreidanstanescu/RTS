@@ -8,7 +8,7 @@ public class OreDeposit : Resource {
     protected override void Start () {
         base.Start();
         numBlocks = GetComponentsInChildren< Ore >().Length;
-        resourceType = ResourceType.Ore;
+        resourceType = "Ore";
     }
  
     protected override void Update () {
@@ -24,9 +24,11 @@ public class OreDeposit : Resource {
                 sortedBlocks[blocks.Length - int.Parse(ore.name)] = ore;
             }
             for(int i = numBlocksToShow; i < sortedBlocks.Length; i++) {
-                sortedBlocks[i].renderer.enabled = false;
+                Renderer r = sortedBlocks[i].GetComponent< Renderer >();
+                r.enabled = false;
+                //sortedBlocks[i].renderer.enabled = false;
             }
-            CalculateBounds();
+            getLimits();
         }
     }
 }

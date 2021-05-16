@@ -1,40 +1,78 @@
 using UnityEngine;
 using RTS;
  
-public class Harvester : Unit {
+public class Harvester : Vehicle {
  
     public float capacity;
  
     private bool harvesting = false, emptying = false;
     private float currentLoad = 0.0f;
-    private ResourceType harvestType;
+    private string harvestType;
     private Resource resourceDeposit;
+    public Building resourceStore;
+    public float collectionAmount, depositAmount;
+    private float currentDeposit = 0.0f;
  
     protected override void Start () {
         base.Start();
-        harvestType = ResourceType.Unknown;
+        harvestType = "unknown";
+    }
+
+    private void Collect() {
+        float collect = collectionAmount * Time.deltaTime;
+        if(currentLoad + collect > capacity) 
+            collect = capacity - currentLoad;
+        resourceDeposit.Remove(collect);
+        currentLoad += collect;
+    }
+    
+    private void Deposit() {
+        currentDeposit += depositAmount * Time.deltaTime;
+        int deposit = Mathf.FloorToInt(currentDeposit);
+        if(deposit >= 1) {
+            if(deposit > currentLoad) deposit = Mathf.FloorToInt(currentLoad);
+            currentDeposit -= deposit;
+            currentLoad -= deposit;
+            string depositType = harvestType;
+            if(harvestType == "Ore") 
+                depositType = "mana";
+            player.addResurse(depositType, deposit);
+        }
     }
  
     protected override void Update () {
         base.Update();
-        if(!rotating && !moving) {
+        if(!moving) {
             if(harvesting || emptying) {
+                //Debug.Log("apar brate");
                 Arms[] arms = GetComponentsInChildren< Arms >();
-                foreach(Arms arm in arms) arm.renderer.enabled = true;
+                foreach(Arms arm in arms) {
+                    //arm.renderer.enabled = false;
+                    Renderer r = arm.GetComponent< Renderer >();
+                    r.enabled = true;
+                }
                 if(harvesting) {
                     Collect();
                     if(currentLoad >= capacity || resourceDeposit.isEmpty()) {
                         currentLoad = Mathf.Floor(currentLoad);
                         harvesting = false;
                         emptying = true;
-                        foreach(Arms arm in arms) arm.renderer.enabled = false;
+                        foreach(Arms arm in arms) {
+                            //arm.renderer.enabled = false;
+                            Renderer r = arm.GetComponent< Renderer >();
+                            r.enabled = false;
+                        }
                         StartMove (resourceStore.transform.position, resourceStore.gameObject);
                     }
                 } else {
                     Deposit();
                     if(currentLoad <= 0) {
                         emptying = false;
-                        foreach(Arms arm in arms) arm.renderer.enabled = false;
+                        foreach(Arms arm in arms) {
+                            //arm.renderer.enabled = false;
+                            Renderer r = arm.GetComponent< Renderer >();
+                            r.enabled = false;
+                        }
                         if(!resourceDeposit.isEmpty()) {
                             harvesting = true;
                             StartMove (resourceDeposit.transform.position, resourceDeposit.gameObject);
@@ -45,24 +83,29 @@ public class Harvester : Unit {
         }
     }
  
-    public override void SetHoverState(GameObject hoverObject) {
-        base.SetHoverState(hoverObject);
-        if(player && player.human && currentlySelected) {
+    public override void SetFlick(GameObject hoverObject) {
+        base.SetFlick(hoverObject);
+        if(player && player.is_player && currentlySelected) {
             if(hoverObject.name != "Ground") {
                 Resource resource = hoverObject.transform.parent.GetComponent< Resource >();
-                if(resource && !resource.isEmpty()) player.hud.SetCursorState(CursorState.Harvest);
+                if(resource && !resource.isEmpty()) {
+                    //player.hud.SetCursorState(CursorState.Harvest);
+                    GameService.changeCursor("harvest");
+                    player.hud.SetCustomCursor();
+                }
             }
         }
     }
  
-    public override void MouseClick(GameObject hitObject, Vector3 hitPoint, Player controller) {
-        base.MouseClick(hitObject, hitPoint, controller);
-        if(player && player.human) {
+    public override void SelectedDo(GameObject hitObject, Vector3 hitPoint, Player controller) {
+        base.SelectedDo(hitObject, hitPoint, controller);
+        if(player && player.is_player) {
             if(hitObject.name != "Ground") {
                 Resource resource = hitObject.transform.parent.GetComponent< Resource >();
                 if(resource && !resource.isEmpty()) {
-                    if(player.SelectedObject) player.SelectedObject.SetSelection(false, playingArea);
-                    SetSelection(true, playingArea);
+                    if(player.SelectedObject) 
+                        player.SelectedObject.SetSelection(false);
+                    SetSelection(true);
                     player.SelectedObject = this;
                     StartHarvest(resource);
                 }
@@ -75,7 +118,7 @@ public class Harvester : Unit {
         resourceDeposit = resource;
         StartMove(resource.transform.position, resource.gameObject);
         //we can only collect one resource at a time, other resources are lost
-        if(harvestType == ResourceType.Unknown || harvestType != resource.GetResourceType()) {
+        if(harvestType == "unknown" || harvestType != resource.GetResourceType()) {
             harvestType = resource.GetResourceType();
             currentLoad = 0.0f;
         }

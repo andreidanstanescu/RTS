@@ -25,6 +25,7 @@ public class HUD : MonoBehaviour
     public Texture2D currentTexture;
     public Texture2D attackCursor, moveCursor, selectCursor;	
     public Texture2D rallyPointCursor;
+    public Texture2D harvesterCursor;
     public Texture2D manaTexture, APTexture, ADTexture;
     public Texture2D buttonHover, buttonClick;
 
@@ -91,6 +92,9 @@ public class HUD : MonoBehaviour
                 break;
             case "flag":
                 currentTexture = rallyPointCursor;
+                break;
+            case "harvest":
+                currentTexture = harvesterCursor;
                 break;
             default:
                 break;

@@ -1,17 +1,17 @@
 using UnityEngine;
 using RTS;
  
-public class Resource : WorldObject {
+public class Resource : World {
  
     public float capacity;
  
     protected float amountLeft;
-    protected ResourceType resourceType;
+    protected string resourceType;
  
     protected override void Start () {
         base.Start();
         amountLeft = capacity;
-        resourceType = ResourceType.Unknown;
+        resourceType = "unknown";
     }
  
     public void Remove(float amount) {
@@ -23,7 +23,7 @@ public class Resource : WorldObject {
         return amountLeft <= 0;
     }
  
-    public ResourceType GetResourceType() {
+    public string GetResourceType() {
         return resourceType;
     }
 }

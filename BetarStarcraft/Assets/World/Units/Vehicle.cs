@@ -1,18 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RTS;
 
 public class Vehicle : World
 {
-<<<<<<< Updated upstream
-=======
 
     private Vector3 destination;
     private GameObject destinationTarget;
     protected bool moving;
     
 
->>>>>>> Stashed changes
     protected override void Awake() {
         base.Awake();
     }
@@ -31,8 +29,6 @@ public class Vehicle : World
     protected override void OnGUI() {
         base.OnGUI();
     }
-<<<<<<< Updated upstream
-=======
 
     public bool free(GameObject destObject){
         return (destObject.name == "Ground");
@@ -86,13 +82,13 @@ public class Vehicle : World
     }
 
     private void CalculateTargetDestination() {
-        Vector3 originalExtents = selectionBounds.extents;
+        Vector3 originalExtents = selectionLimits.extents;
         Vector3 normalExtents = originalExtents;
         normalExtents.Normalize();
         float numberOfExtents = originalExtents.x / normalExtents.x;
         int unitShift = Mathf.FloorToInt(numberOfExtents);
     
-        WorldObject worldObject = destinationTarget.GetComponent< WorldObject >();
+        World worldObject = destinationTarget.GetComponent< World >();
 
         if(worldObject) 
             originalExtents = worldObject.GetSelectionBounds().extents;
@@ -116,7 +112,6 @@ public class Vehicle : World
             destination -= direction;
         destination.y = destinationTarget.transform.position.y;
 
-        destinationTarget = null
+        destinationTarget = null;
     }
->>>>>>> Stashed changes
 }
