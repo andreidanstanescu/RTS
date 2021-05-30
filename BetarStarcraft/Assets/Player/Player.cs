@@ -49,7 +49,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void AddUnit(string unitName, Vector3 spawnPoint, Vector3 rallyPoint, Quaternion rotation) {
+    public void AddUnit(string unitName, Vector3 spawnPoint, Vector3 rallyPoint, Quaternion rotation, Building creator) {
         Debug.Log("add " + unitName + " to player");
         PrefabVehicle v = GetComponentInChildren< PrefabVehicle >();
         GameObject newUnit = (GameObject)Instantiate(GameService.extractVehicle(unitName), spawnPoint, rotation);
@@ -63,6 +63,10 @@ public class Player : MonoBehaviour
             unitObject.StartMove(baza);
             //Debug.Log("adaug vehicul");
         }
-            
+        if(unitObject) {
+            unitObject.Init(creator);
+            if(spawnPoint != rallyPoint) 
+                unitObject.StartMove(rallyPoint);
+        }   
     }
 }

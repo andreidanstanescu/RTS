@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+
 //creez noul namespace pe care il voi folosi de peste tot din joc
 namespace RTS {
     //Singleton Pattern
@@ -67,7 +68,17 @@ namespace RTS {
 
         public static Prefabs playObjects = null;
 
+        private static Dictionary< ResourceType, Texture2D > resourceHealthBarTextures;
         //END_CONSTANTE
+
+        // Textures for HP bar
+
+        private static Texture2D healthyTexture, damagedTexture, criticalTexture;
+        public static Texture2D HealthyTexture { get { return healthyTexture; } }
+        public static Texture2D DamagedTexture { get { return damagedTexture; } }
+        public static Texture2D CriticalTexture { get { return criticalTexture; } }
+
+        //END_TEXTURES
 
         public static GUISkin selectIcon;
         public static void setSkin(GUISkin other){
@@ -181,5 +192,21 @@ namespace RTS {
             return new Rect(selectBoxLeft, selectBoxTop, selectBoxWidth, selectBoxHeight);
         }
 
+        public static void StoreSelectBoxItems(GUISkin skin, Texture2D healthy, Texture2D damaged, Texture2D critical) {
+            selectBoxSkin = skin;
+            healthyTexture = healthy;
+            damagedTexture = damaged;
+            criticalTexture = critical;
+        }
+
+        public static void SetResourceHealthBarTextures(Dictionary< ResourceType, Texture2D > images) {
+            resourceHealthBarTextures = images;
+        }
+
+        public static Texture2D GetResourceHealthBar(ResourceType resourceType) {
+            if(resourceHealthBarTextures != null && resourceHealthBarTextures.ContainsKey(resourceType)) 
+                return resourceHealthBarTextures[resourceType];
+            return null;
+        }
     }
 }

@@ -143,7 +143,7 @@ public class Building : World
         if (currentBuildProgress > maxBuildProgress) {
             Debug.Log("produce");
             if (player) {
-                player.AddUnit(buildQueue.Dequeue(), spawnPoint, flagPosition, transform.rotation);
+                player.AddUnit(buildQueue.Dequeue(), spawnPoint, rallyPoint, transform.rotation, this);
                 UpdateSpawnPoint();
             }
             currentBuildProgress = 0.0f;

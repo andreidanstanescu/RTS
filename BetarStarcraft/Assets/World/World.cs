@@ -15,6 +15,9 @@ public class World : MonoBehaviour
     protected Bounds selectionLimits;
     protected Rect mapArea = new Rect(0.0f, 0.0f, 0.0f, 0.0f);
 
+    protected GUIStyle healthStyle = new GUIStyle();
+    protected float healthPercentage = 1.0f;
+
     // protected virtual = cuvant cheie pentru mostenire
 
     //Awake este o functie mostenita din MonoBehaviour
@@ -101,16 +104,37 @@ public class World : MonoBehaviour
         GUI.EndGroup();
     }
 
-    public virtual void SetFlick(GameObject hoverObject) {
-        if(player && player.is_player && currentlySelected) {
-            if(hoverObject.name != "Ground") {
-                GameService.changeCursor("select");
-                player.hud.SetCustomCursor();
+    protected virtual void DrawSelectionBox(Rect selectBox) {
+        //Not sure about this either, maybe should be merged with the one above
+        GUI.Box(selectBox, "");
+        CalculateCurrentHealth();
+        GUI.Label(new Rect(selectBox.x, selectBox.y - 7, selectBox.width * healthPercentage, 5), "", healthStyle);
+    }
+
+    public virtual void MouseClick(GameObject hitObject, Vector3 hitPoint, Player controller) {
+        //Not sure about this change, fostul SetFlick
+        if(currentlySelected && hitObject && hitObject.name != "Ground") {
+            WorldObject worldObject = hitObject.transform.parent.GetComponent< WorldObject >();
+            if(worldObject) {
+                Resource resource = hitObject.transform.parent.GetComponent< Resource >();
+                if(resource && resource.isEmpty()) return;
+                ChangeSelection(worldObject, controller);
             }
         }
     }
 
     public Bounds GetSelectionBounds() {
         return selectionLimits;
+    }
+
+    protected virtual void CalculateCurrentHealth() {
+        healthPercentage = (float)hitPoints / (float)maxHitPoints;
+
+        if(healthPercentage > 0.65f) 
+            healthStyle.normal.background = ResourceManager.HealthyTexture;
+        else if(healthPercentage > 0.35f) 
+            healthStyle.normal.background = ResourceManager.DamagedTexture;
+        else 
+            healthStyle.normal.background = ResourceManager.CriticalTexture;
     }
 }

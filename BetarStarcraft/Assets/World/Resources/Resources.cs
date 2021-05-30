@@ -26,4 +26,9 @@ public class Resource : World {
     public string GetResourceType() {
         return resourceType;
     }
+
+    protected override void CalculateCurrentHealth () {
+        healthPercentage = amountLeft / capacity;
+        healthStyle.normal.background = ResourceManager.GetResourceHealthBar(resourceType);
+    }
 }

@@ -28,11 +28,13 @@ public class HUD : MonoBehaviour
     public Texture2D harvesterCursor;
     public Texture2D manaTexture, APTexture, ADTexture;
     public Texture2D buttonHover, buttonClick;
-
+    public Texture2D[] resourceHealthBars;
+    
     private string previousCursorState;
     
     public Texture2D buildFrame, buildMask;
     public Texture2D smallButtonHover, smallButtonClick;
+    public Texture2D healthy, damaged, critical;
 
     private CursorMode cursorMode = CursorMode.Auto;
 
@@ -112,6 +114,7 @@ public class HUD : MonoBehaviour
         player = transform.root.GetComponent< Player >();
         GameService.setSkin(selectIcon);
         GameService.changeCursor("select");
+        GameService.StoreSelectBoxItems(selectBoxSkin, healthy, damaged, critical);
         resurse = new Dictionary<string, int>();
         resourceTextures = new Dictionary<string, Texture2D>();
         resurse.Add("mana", 100);
@@ -123,6 +126,16 @@ public class HUD : MonoBehaviour
         //Debug.Log(player.is_player);
         getResourceTextures();
         buildAreaHeight = Screen.height - RESOURCE_BAR_HEIGHT - SELECTION_NAME_HEIGHT - 2 * BUTTON_SPACING;
+        Dictionary< ResourceType, Texture2D > resourceHealthBarTextures = new Dictionary< ResourceType, Texture2D >();
+        for(int i = 0; i < resourceHealthBars.Length; i++) {
+            switch(resourceHealthBars[i].name) {
+                case "ore":
+                    resourceHealthBarTextures.Add(ResourceType.Ore, resourceHealthBars[i]);
+                    break;
+                default: break;
+            }
+        }
+        ResourceManager.SetResourceHealthBarTextures(resourceHealthBarTextures);
     }
 
     void getResourceTextures()
