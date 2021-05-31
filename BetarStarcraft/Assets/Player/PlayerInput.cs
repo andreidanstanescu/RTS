@@ -207,7 +207,13 @@ public class PlayerInput : MonoBehaviour
                         jucator.SelectedObject.SetFlick(gotoObject);
                     if(gotoObject.name == "Ground")
                         return;
-                    Player alt_jucator = gotoObject.transform.parent.GetComponent< Player >();
+                    Player alt_jucator = null;
+                    try{
+                        alt_jucator = gotoObject.transform.parent.GetComponent< Player >();
+                    }
+                    catch(UnassignedReferenceException){
+                        //Debug.Log("nimic selectat");
+                    }
                     //aparent da eroare chiar daca e null
                     //o sa il adaug drept Child Component direct din Unity la final
                     if(alt_jucator == null || alt_jucator != jucator)
@@ -228,7 +234,7 @@ public class PlayerInput : MonoBehaviour
 
         if(jucator.hud.InMouse()){
             if(jucator.IsFindingBuildingLocation()) {
-                if(jucator.CanPlaceBuilding()) player.StartConstruction();
+                if(jucator.CanPlaceBuilding()) jucator.StartConstruction();
             } else {
                 //aflu obiectul si punctul selectat
                 Vector3 point;
@@ -250,12 +256,12 @@ public class PlayerInput : MonoBehaviour
     }
 
     private void MouseRight(){
-        if(player.hud.MouseInBounds() && !Input.GetKey(KeyCode.LeftAlt) && player.SelectedObject) {
-            if(player.IsFindingBuildingLocation()) {
-                player.CancelBuildingPlacement();
+        if(jucator.hud.InMouse() && !Input.GetKey(KeyCode.LeftAlt) && jucator.SelectedObject) {
+            if(jucator.IsFindingBuildingLocation()) {
+                jucator.CancelBuildingPlacement();
             } else {
-                player.SelectedObject.SetSelection(false, player.hud.GetPlayingArea());
-                player.SelectedObject = null;
+                jucator.SelectedObject.SetSelection(false);
+                jucator.SelectedObject = null;
             }
         }
     }

@@ -29,6 +29,6 @@ public class Resource : World {
 
     protected override void CalculateCurrentHealth (float lowSplit, float highSplit) {
         healthPercentage = amountLeft / capacity;
-        healthStyle.normal.background = ResourceManager.GetResourceHealthBar(resourceType);
+        healthStyle.normal.background = GameService.GetResourceHealthBar(resourceType);
     }
 }

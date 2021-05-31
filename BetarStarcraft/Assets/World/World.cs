@@ -106,24 +106,35 @@ public class World : MonoBehaviour
         Rect selectBox = GameService.getLimits(selectionLimits, mapArea);
         //Draw the selection box around the currently selected object, within the bounds of the playing area
         GUI.BeginGroup(mapArea);
-        GUI.Box(selectBox, "selectat");
+        //GUI.Box(selectBox, "selectat");
+        DrawSelectionBox(selectBox);
         GUI.EndGroup();
     }
 
     protected virtual void DrawSelectionBox(Rect selectBox) {
+        //Debug.Log("deseneaza bara health");
         GUI.Box(selectBox, "");
         CalculateCurrentHealth(0.35f, 0.65f);
         DrawHealthBar(selectBox, "");
     }
 
+    public virtual void SetFlick(GameObject hoverObject) {
+        if(player && player.is_player && currentlySelected) {
+            if(hoverObject.name != "Ground") {
+                GameService.changeCursor("select");
+                player.hud.SetCustomCursor();
+            }
+        }
+    }
+
     public virtual void MouseClick(GameObject hitObject, Vector3 hitPoint, Player controller) {
         //Not sure about this change, fostul SetFlick
         if(currentlySelected && hitObject && hitObject.name != "Ground") {
-            WorldObject worldObject = hitObject.transform.parent.GetComponent< WorldObject >();
+            World worldObject = hitObject.transform.parent.GetComponent< World>();
             if(worldObject) {
                 Resource resource = hitObject.transform.parent.GetComponent< Resource >();
                 if(resource && resource.isEmpty()) return;
-                ChangeSelection(worldObject, controller);
+                iCanChangeTheWorld(worldObject, controller);
             }
         }
     }
@@ -134,9 +145,9 @@ public class World : MonoBehaviour
 
     protected virtual void CalculateCurrentHealth(float lowSplit, float highSplit) {
         healthPercentage = (float)hitPoints / (float)maxHitPoints;
-        if(healthPercentage > highSplit) healthStyle.normal.background = ResourceManager.HealthyTexture;
-        else if(healthPercentage > lowSplit) healthStyle.normal.background = ResourceManager.DamagedTexture;
-        else healthStyle.normal.background = ResourceManager.CriticalTexture;
+        if(healthPercentage > highSplit) healthStyle.normal.background = GameService.HealthyTexture;
+        else if(healthPercentage > lowSplit) healthStyle.normal.background = GameService.DamagedTexture;
+        else healthStyle.normal.background = GameService.CriticalTexture;
     }
 
     protected void DrawHealthBar(Rect selectBox, string label) {
@@ -152,7 +163,7 @@ public class World : MonoBehaviour
     
     public void SetTransparentMaterial(Material material, bool storeExistingMaterial) {
         if(storeExistingMaterial) oldMaterials.Clear();
-        Renderer[] renderers = GetComponentsInChildren< Renderers >();
+        Renderer[] renderers = GetComponentsInChildren< Renderer >();
         foreach(Renderer renderer in renderers) {
             if(storeExistingMaterial) oldMaterials.Add(renderer.material);
             renderer.material = material;
@@ -160,7 +171,7 @@ public class World : MonoBehaviour
     }
     
     public void RestoreMaterials() {
-        Renderer[] renderers = GetComponentsInChildren< Renderers >();
+        Renderer[] renderers = GetComponentsInChildren< Renderer >();
         if(oldMaterials.Count == renderers.Length) {
             for(int i = 0; i < renderers.Length; i++) {
                 renderers[i].material = oldMaterials[i];
@@ -169,6 +180,6 @@ public class World : MonoBehaviour
     }
     
     public void SetPlayingArea(Rect playingArea) {
-        this.playingArea = playingArea;
+        this.mapArea = playingArea;
     }
 }

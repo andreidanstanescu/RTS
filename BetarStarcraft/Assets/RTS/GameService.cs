@@ -68,7 +68,7 @@ namespace RTS {
 
         public static Prefabs playObjects = null;
 
-        private static Dictionary< ResourceType, Texture2D > resourceHealthBarTextures;
+        private static Dictionary< string, Texture2D > resourceHealthBarTextures;
         //END_CONSTANTE
 
         // Textures for HP bar
@@ -193,17 +193,17 @@ namespace RTS {
         }
 
         public static void StoreSelectBoxItems(GUISkin skin, Texture2D healthy, Texture2D damaged, Texture2D critical) {
-            selectBoxSkin = skin;
+            selectIcon = skin;
             healthyTexture = healthy;
             damagedTexture = damaged;
             criticalTexture = critical;
         }
 
-        public static void SetResourceHealthBarTextures(Dictionary< ResourceType, Texture2D > images) {
+        public static void SetResourceHealthBarTextures(Dictionary< string, Texture2D > images) {
             resourceHealthBarTextures = images;
         }
 
-        public static Texture2D GetResourceHealthBar(ResourceType resourceType) {
+        public static Texture2D GetResourceHealthBar(string resourceType) {
             if(resourceHealthBarTextures != null && resourceHealthBarTextures.ContainsKey(resourceType)) 
                 return resourceHealthBarTextures[resourceType];
             return null;
@@ -219,7 +219,23 @@ namespace RTS {
             Ray ray = Camera.main.ScreenPointToRay(origin);
             RaycastHit hit;
             if(Physics.Raycast(ray, out hit)) return hit.point;
-            return ResourceManager.InvalidPosition;
+            return GameService.OutOfBounds;
+        }
+
+        public static Vector3 FindHitPoint() {
+            Ray ray = Camera.main.ScreenPointToRay(UnityEngine.Input.mousePosition);
+            RaycastHit hit;
+            if(Physics.Raycast(ray, out hit)) 
+                return hit.point;
+            return GameService.OutOfBounds;
+        }
+
+        public static GameObject FindHitObject(){
+            Ray ray = Camera.main.ScreenPointToRay(UnityEngine.Input.mousePosition);
+            RaycastHit hit;
+            if(Physics.Raycast(ray, out hit)) 
+                return hit.collider.gameObject;
+            return null;
         }
     }
 }

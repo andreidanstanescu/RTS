@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Worker : Unit
+public class Worker : Vehicle
 {
 
     public int buildSpeed;
@@ -14,12 +14,12 @@ public class Worker : Unit
     protected override void Start()
     {
         base.Start();
-        actions = new string[] { "Refinery", "WarFactory" };
+        actions = new string[] { "Refinery", "Hut" };
     }
 
     protected override void Update()
     {
-        if(!moving && !rotating) {
+        if(!moving) {
             if(building && currentProject && currentProject.UnderConstruction()) {
                 amountBuilt += buildSpeed * Time.deltaTime;
                 int amount = Mathf.FloorToInt(amountBuilt);
@@ -49,7 +49,7 @@ public class Worker : Unit
         CreateBuilding(actionToPerform);
     }
 
-    protected override void StartMove(Vector3 destination)
+    public override void StartMove(Vector3 destination)
     {
         base.StartMove(destination);
         amountBuilt = 0.0f;
@@ -59,11 +59,12 @@ public class Worker : Unit
     private void CreateBuilding(string buildingName) {
         Vector3 buildPoint = new Vector3(transform.position.x, transform.position.y, transform.position.z + 10);
         if(player) 
-            player.createBuilding(buildingName, buildPoint, this, playingArea);
+            player.CreateBuilding(buildingName, buildPoint, this, mapArea);
     }
+    
     public override void MouseClick (GameObject hitObject, Vector3 hitPoint, Player controller) {
         bool doBase = true;
-        if(player && player.human && currentlySelected && hitObject && hitObject.name!="Ground") {
+        if(player && player.is_player && currentlySelected && hitObject && hitObject.name!="Ground") {
             Building building = hitObject.transform.parent.GetComponent< Building >();
             if(building) {
                 if(building.UnderConstruction()) {

@@ -145,7 +145,7 @@ public class Building : World
         if (currentBuildProgress > maxBuildProgress) {
             Debug.Log("produce");
             if (player) {
-                player.AddUnit(buildQueue.Dequeue(), spawnPoint, rallyPoint, transform.rotation, this);
+                player.AddUnit(buildQueue.Dequeue(), spawnPoint, flagPosition, transform.rotation, this);
                 UpdateSpawnPoint();
             }
             currentBuildProgress = 0.0f;
@@ -171,15 +171,15 @@ public class Building : World
         Destroy(this.gameObject);
     }
     public void StartConstruction() {
-        CalculateBounds();
+        getLimits();
         needsBuilding = true;
         hitPoints = 0;
     }
     private void DrawBuildProgress() {
-        GUI.skin = ResourceManager.SelectBoxSkin;
-        Rect selectBox = WorkManager.CalculateSelectionBox(selectionBounds, playingArea);
+        GUI.skin = GameService.selectIcon;
+        Rect selectBox = GameService.getLimits(selectionLimits, mapArea);
         
-        GUI.BeginGroup(playingArea);
+        GUI.BeginGroup(mapArea);
         CalculateCurrentHealth(0.5f, 0.99f);
         DrawHealthBar(selectBox, "Building ...");
         GUI.EndGroup();

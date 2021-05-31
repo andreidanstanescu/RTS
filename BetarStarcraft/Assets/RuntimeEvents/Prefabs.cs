@@ -74,6 +74,7 @@ public class Prefabs : MonoBehaviour
         }
         for(int i = 0; i < vehicles.Length; i++) {
             Vehicle vehicle = vehicles[i].GetComponent< Vehicle >();
+            //Debug.Log(vehicle.name);
             if(vehicle != null && vehicle.name == name) 
                 return vehicle.image;
         }

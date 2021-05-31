@@ -114,7 +114,7 @@ public class HUD : MonoBehaviour
         player = transform.root.GetComponent< Player >();
         GameService.setSkin(selectIcon);
         GameService.changeCursor("select");
-        GameService.StoreSelectBoxItems(selectBoxSkin, healthy, damaged, critical);
+        GameService.StoreSelectBoxItems(selectIcon, healthy, damaged, critical);
         resurse = new Dictionary<string, int>();
         resourceTextures = new Dictionary<string, Texture2D>();
         resurse.Add("mana", 100);
@@ -126,16 +126,17 @@ public class HUD : MonoBehaviour
         //Debug.Log(player.is_player);
         getResourceTextures();
         buildAreaHeight = Screen.height - RESOURCE_BAR_HEIGHT - SELECTION_NAME_HEIGHT - 2 * BUTTON_SPACING;
-        Dictionary< ResourceType, Texture2D > resourceHealthBarTextures = new Dictionary< ResourceType, Texture2D >();
+        Dictionary< string, Texture2D > resourceHealthBarTextures = new Dictionary< string, Texture2D >();
         for(int i = 0; i < resourceHealthBars.Length; i++) {
+            //Debug.Log(resourceHealthBars[i].name);
             switch(resourceHealthBars[i].name) {
-                case "ore":
-                    resourceHealthBarTextures.Add(ResourceType.Ore, resourceHealthBars[i]);
+                case "Ore Health Bar":
+                    resourceHealthBarTextures.Add("Ore", resourceHealthBars[i]);
                     break;
                 default: break;
             }
         }
-        ResourceManager.SetResourceHealthBarTextures(resourceHealthBarTextures);
+        GameService.SetResourceHealthBarTextures(resourceHealthBarTextures);
     }
 
     void getResourceTextures()
@@ -270,6 +271,7 @@ public class HUD : MonoBehaviour
         buttons.active.background = buttonClick;
         GUI.skin.button = buttons;*/
         int numActions = actions.Length;
+        //Debug.Log(actions[0]);
         //define the area to draw the actions inside
         GUI.BeginGroup(new Rect(BUILD_IMAGE_WIDTH, 0, ORDERS_BAR_WIDTH, buildAreaHeight));
         //draw scroll bar for the list of actions if need be
@@ -281,8 +283,10 @@ public class HUD : MonoBehaviour
             int row = i / 2 + ACTION_IMAGE_HEIGHT;
             Rect pos = GetButtonPos(row, column);
             Texture2D action = GameService.extractImage(actions[i]);
+            //Debug.Log("adauga imaginea");
             if(action) {
                 //create the button and handle the click of that button
+                //Debug.Log("adauga imaginea");
                 if(GUI.Button(pos, action)) {
                     if(player.SelectedObject) 
                         player.SelectedObject.PerformAction(actions[i]);
@@ -291,6 +295,10 @@ public class HUD : MonoBehaviour
         }
         GUI.EndGroup();
     }
+
+    public Rect GetPlayingArea() {
+		return new Rect(0, RESOURCE_BAR_HEIGHT, Screen.width - ORDERS_BAR_WIDTH, Screen.height - RESOURCE_BAR_HEIGHT);
+	}
 
 
     private void DrawStandardBuildingOptions(Building building){

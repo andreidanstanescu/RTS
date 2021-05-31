@@ -118,31 +118,39 @@ public class Vehicle : World
         destinationTarget = null;
     }
 
-    public override void SetHoverState(GameObject hoverObject) {
-        base.SetHoverState(hoverObject);
+    public override void SetFlick(GameObject hoverObject) {
+        base.SetFlick(hoverObject);
         //only handle input if owned by a human player and currently selected
-        if(player && player.human && currentlySelected) {
+        if(player && player.is_player && currentlySelected) {
             bool moveHover = false;
             if(hoverObject.name == "Ground") {
                 moveHover = true;
             } else {
                 Resource resource = hoverObject.transform.parent.GetComponent< Resource >();
-                if(resource && resource.isEmpty()) moveHover = true;
+                if(resource && resource.isEmpty()) 
+                    moveHover = true;
             }
-            if(moveHover) player.hud.SetCursorState(CursorState.Move);
+            if(moveHover) {
+                GameService.changeCursor("misca");
+                player.hud.SetCustomCursor();
+            }
+
         }
     }
 
     public override void MouseClick(GameObject hitObject, Vector3 hitPoint, Player controller) {
         base.MouseClick(hitObject, hitPoint, controller);
         //only handle input if owned by a human player and currently selected
-        if(player && player.human && currentlySelected) {
+        if(player && player.is_player && currentlySelected) {
             bool clickedOnEmptyResource = false;
             if(hitObject.transform.parent) {
                 Resource resource = hitObject.transform.parent.GetComponent< Resource >();
-                if(resource && resource.isEmpty()) clickedOnEmptyResource = true;
+                if(resource && resource.isEmpty()) {
+                    clickedOnEmptyResource = true;
+                    Debug.Log("resursa goala");
+                }
             }
-            if((hitObject.name == "Ground" || clickedOnEmptyResource) && hitPoint != ResourceManager.InvalidPosition) {
+            if((hitObject.name == "Ground" || clickedOnEmptyResource) && hitPoint != GameService.OutOfBounds) {
                 float x = hitPoint.x;
                 //makes sure that the unit stays on top of the surface it is on
                 float y = hitPoint.y + player.SelectedObject.transform.position.y;

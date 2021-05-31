@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 346b350470f3d384abcbaf29ce04300b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Doofenschmirtz Evil INC
+  name: Hut
   image: {fileID: 2800000, guid: a4ac576e0e3743e4eb071f9e181e8f38, type: 3}
   cost: 0
   hitPoints: 0

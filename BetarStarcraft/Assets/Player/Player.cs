@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     public Material notAllowedMaterial, allowedMaterial;
  
     private Building tempBuilding;
-    private Unit tempCreator;
+    private Vehicle tempCreator;
     private bool findingPlacement = false;
 
     // Start is called before the first frame update
@@ -53,7 +53,7 @@ public class Player : MonoBehaviour
             this.hud.updateResources(resurse);
         }
         if(findingPlacement) {
-            tempBuilding.CalculateBounds();
+            tempBuilding.getLimits();
             if(CanPlaceBuilding()) tempBuilding.SetTransparentMaterial(allowedMaterial, false);
             else tempBuilding.SetTransparentMaterial(notAllowedMaterial, false);
         }
@@ -79,8 +79,9 @@ public class Player : MonoBehaviour
                 unitObject.StartMove(rallyPoint);
         }   
     }
-    public void CreateBuilding(string buildingName, Vector3 buildPoint, Unit creator, Rect playingArea) {
-        GameObject newBuilding = (GameObject)Instantiate(ResourceManager.GetBuilding(buildingName), buildPoint, new Quaternion());
+
+    public void CreateBuilding(string buildingName, Vector3 buildPoint, Vehicle creator, Rect playingArea) {
+        GameObject newBuilding = (GameObject)Instantiate(GameService.extractBuilding(buildingName), buildPoint, new Quaternion());
         tempBuilding = newBuilding.GetComponent< Building >();
         if (tempBuilding) {
             tempCreator = creator;
@@ -88,14 +89,17 @@ public class Player : MonoBehaviour
             tempBuilding.SetTransparentMaterial(notAllowedMaterial, true);
             tempBuilding.SetColliders(false);
             tempBuilding.SetPlayingArea(playingArea);
-        } else Destroy(newBuilding);
+        } 
+        else
+            Destroy(newBuilding);
     }
+
     public bool IsFindingBuildingLocation() {
         return findingPlacement;
     }
     
     public void FindBuildingLocation() {
-        Vector3 newLocation = WorkManager.FindHitPoint();
+        Vector3 newLocation = GameService.FindHitPoint();
         newLocation.y = 0;
         tempBuilding.transform.position = newLocation;
     }
@@ -115,19 +119,19 @@ public class Player : MonoBehaviour
     
 
         List< Vector3 > corners = new List< Vector3 >();
-        corners.Add(Camera.mainCamera.WorldToScreenPoint(new Vector3(cx+ex,cy+ey,cz+ez)));
-        corners.Add(Camera.mainCamera.WorldToScreenPoint(new Vector3(cx+ex,cy+ey,cz-ez)));
-        corners.Add(Camera.mainCamera.WorldToScreenPoint(new Vector3(cx+ex,cy-ey,cz+ez)));
-        corners.Add(Camera.mainCamera.WorldToScreenPoint(new Vector3(cx-ex,cy+ey,cz+ez)));
-        corners.Add(Camera.mainCamera.WorldToScreenPoint(new Vector3(cx+ex,cy-ey,cz-ez)));
-        corners.Add(Camera.mainCamera.WorldToScreenPoint(new Vector3(cx-ex,cy-ey,cz+ez)));
-        corners.Add(Camera.mainCamera.WorldToScreenPoint(new Vector3(cx-ex,cy+ey,cz-ez)));
-        corners.Add(Camera.mainCamera.WorldToScreenPoint(new Vector3(cx-ex,cy-ey,cz-ez)));
+        corners.Add(Camera.main.WorldToScreenPoint(new Vector3(cx+ex,cy+ey,cz+ez)));
+        corners.Add(Camera.main.WorldToScreenPoint(new Vector3(cx+ex,cy+ey,cz-ez)));
+        corners.Add(Camera.main.WorldToScreenPoint(new Vector3(cx+ex,cy-ey,cz+ez)));
+        corners.Add(Camera.main.WorldToScreenPoint(new Vector3(cx-ex,cy+ey,cz+ez)));
+        corners.Add(Camera.main.WorldToScreenPoint(new Vector3(cx+ex,cy-ey,cz-ez)));
+        corners.Add(Camera.main.WorldToScreenPoint(new Vector3(cx-ex,cy-ey,cz+ez)));
+        corners.Add(Camera.main.WorldToScreenPoint(new Vector3(cx-ex,cy+ey,cz-ez)));
+        corners.Add(Camera.main.WorldToScreenPoint(new Vector3(cx-ex,cy-ey,cz-ez)));
     
         foreach(Vector3 corner in corners) {
-            GameObject hitObject = WorkManager.FindHitObject(corner);
+            GameObject hitObject = GameService.FindHitObject(corner);
             if(hitObject && hitObject.name != "Ground") {
-                WorldObject worldObject = hitObject.transform.parent.GetComponent< WorldObject >();
+                World worldObject = hitObject.transform.parent.GetComponent< World>();
                 if(worldObject && placeBounds.Intersects(worldObject.GetSelectionBounds())) canPlace = false;
             }
         }
@@ -136,7 +140,7 @@ public class Player : MonoBehaviour
 
     public void StartConstruction() {
         findingPlacement = false;
-        Buildings buildings = GetComponentInChildren< Buildings >();
+        PrefabBuilding buildings = GetComponentInChildren< PrefabBuilding >();
         if(buildings) tempBuilding.transform.parent = buildings.transform;
         tempBuilding.SetPlayer();
         tempBuilding.SetColliders(true);

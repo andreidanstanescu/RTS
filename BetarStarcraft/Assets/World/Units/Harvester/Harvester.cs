@@ -143,7 +143,7 @@ public class Harvester : Vehicle {
         float leftPos = selectBox.x + selectBox.width - 7;
         float topPos = selectBox.y + 2 + (maxHeight - height);
         float width = 5;
-        Texture2D resourceBar = ResourceManager.GetResourceHealthBar(harvestType);
+        Texture2D resourceBar = GameService.GetResourceHealthBar(harvestType);
         if(resourceBar) 
             GUI.DrawTexture(new Rect(leftPos, topPos, width, height), resourceBar);
     }
