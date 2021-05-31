@@ -9,6 +9,7 @@ public class Building : World
     private float frameTime = 0.01f;
     protected Queue< string > buildQueue;
     private float currentBuildProgress = 0.0f;
+    private bool needsBuilding = false;
     private Vector3 spawnPoint;
     private Vector3 initialPoint;
     private float dx = 1.0f;
@@ -46,6 +47,7 @@ public class Building : World
     
     protected override void OnGUI() {
         base.OnGUI();
+        if(needsBuilding) DrawBuildProgress();
     }
 
     public override void SetSelection(bool selected) {
@@ -168,5 +170,30 @@ public class Building : World
             SetSelection(false);
         Destroy(this.gameObject);
     }
-
+    public void StartConstruction() {
+        CalculateBounds();
+        needsBuilding = true;
+        hitPoints = 0;
+    }
+    private void DrawBuildProgress() {
+        GUI.skin = ResourceManager.SelectBoxSkin;
+        Rect selectBox = WorkManager.CalculateSelectionBox(selectionBounds, playingArea);
+        
+        GUI.BeginGroup(playingArea);
+        CalculateCurrentHealth(0.5f, 0.99f);
+        DrawHealthBar(selectBox, "Building ...");
+        GUI.EndGroup();
+    }
+        public bool UnderConstruction() {
+        return needsBuilding;
+    }
+    
+    public void Construct(int amount) {
+        hitPoints += amount;
+        if(hitPoints >= maxHitPoints) {
+            hitPoints = maxHitPoints;
+            needsBuilding = false;
+            RestoreMaterials();
+        }
+    }
 }

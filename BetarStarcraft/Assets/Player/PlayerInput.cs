@@ -197,62 +197,67 @@ public class PlayerInput : MonoBehaviour
     private void Flick(){
 
         if(jucator.hud.InMouse()){
+            if(jucator.IsFindingBuildingLocation()) {
+                jucator.FindBuildingLocation();
+            } else {
             //aflu obiectul si punctul selectat
-            GameObject gotoObject = GetCurrentObject();
-            if(gotoObject != null){
-                if(jucator.SelectedObject)
-                    jucator.SelectedObject.SetFlick(gotoObject);
-                if(gotoObject.name == "Ground")
-                    return;
-                Player alt_jucator = gotoObject.transform.parent.GetComponent< Player >();
-                //aparent da eroare chiar daca e null
-                //o sa il adaug drept Child Component direct din Unity la final
-                if(alt_jucator == null || alt_jucator != jucator)
-                    return;
-                Building b = gotoObject.transform.parent.GetComponent< Building >();
-                Debug.Log(b.name);
-                if(b){
-                    GameService.changeCursor("select");
-                    alt_jucator.hud.SetCustomCursor();
+                GameObject gotoObject = GetCurrentObject();
+                if(gotoObject != null){
+                    if(jucator.SelectedObject)
+                        jucator.SelectedObject.SetFlick(gotoObject);
+                    if(gotoObject.name == "Ground")
+                        return;
+                    Player alt_jucator = gotoObject.transform.parent.GetComponent< Player >();
+                    //aparent da eroare chiar daca e null
+                    //o sa il adaug drept Child Component direct din Unity la final
+                    if(alt_jucator == null || alt_jucator != jucator)
+                        return;
+                    Building b = gotoObject.transform.parent.GetComponent< Building >();
+                    Debug.Log(b.name);
+                    if(b){
+                        GameService.changeCursor("select");
+                        alt_jucator.hud.SetCustomCursor();
+                    }
                 }
             }
         }
-
     }
 
 
     private void MouseLeft(){
 
         if(jucator.hud.InMouse()){
-            //aflu obiectul si punctul selectat
-            Vector3 point;
-            point = GetCollisionPoint();
-            GameObject gotoObject = GetCurrentObject();
-            if(point != GameService.OutOfBounds && gotoObject != null){
-                if(jucator.SelectedObject)
-                    jucator.SelectedObject.SelectedDo(gotoObject, point, jucator);
-                if(gotoObject.name == "Ground")
-                    return;
-                World worldObject = gotoObject.transform.parent.GetComponent< World >();
-                if(worldObject == null)
-                    return;
-                jucator.SelectedObject = worldObject;
-                worldObject.SetSelection(true);
+            if(jucator.IsFindingBuildingLocation()) {
+                if(jucator.CanPlaceBuilding()) player.StartConstruction();
+            } else {
+                //aflu obiectul si punctul selectat
+                Vector3 point;
+                point = GetCollisionPoint();
+                GameObject gotoObject = GetCurrentObject();
+                if(point != GameService.OutOfBounds && gotoObject != null){
+                    if(jucator.SelectedObject)
+                        jucator.SelectedObject.SelectedDo(gotoObject, point, jucator);
+                    if(gotoObject.name == "Ground")
+                        return;
+                    World worldObject = gotoObject.transform.parent.GetComponent< World >();
+                    if(worldObject == null)
+                        return;
+                    jucator.SelectedObject = worldObject;
+                    worldObject.SetSelection(true);
+                }
             }
         }
-
     }
 
     private void MouseRight(){
-
-        if(jucator.hud.InMouse()){
-            Vector3 point = GetCollisionPoint();
-            if(jucator.SelectedObject){
-                jucator.SelectedObject.SetSelection(false);
-                jucator.SelectedObject = null;
+        if(player.hud.MouseInBounds() && !Input.GetKey(KeyCode.LeftAlt) && player.SelectedObject) {
+            if(player.IsFindingBuildingLocation()) {
+                player.CancelBuildingPlacement();
+            } else {
+                player.SelectedObject.SetSelection(false, player.hud.GetPlayingArea());
+                player.SelectedObject = null;
             }
         }
-
     }
 
 

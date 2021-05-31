@@ -17,6 +17,7 @@ public class World : MonoBehaviour
 
     protected GUIStyle healthStyle = new GUIStyle();
     protected float healthPercentage = 1.0f;
+    private List< Material > oldMaterials = new List< Material >();
 
     // protected virtual = cuvant cheie pentru mostenire
 
@@ -31,12 +32,17 @@ public class World : MonoBehaviour
     protected virtual void Start () {
         player = transform.root.GetComponentInChildren< Player >();
         actions = new string[GameService.ACTION_LIMITS];
+        SetPlayer();
     }
     
     protected virtual void Update () {
     
     }
     
+    public void SetPlayer() {
+        player = transform.root.GetComponentInChildren< Player >();
+    }
+
     //update de fiecare data cand il selectez
     protected virtual void OnGUI() {
         if(currentlySelected){
@@ -105,10 +111,9 @@ public class World : MonoBehaviour
     }
 
     protected virtual void DrawSelectionBox(Rect selectBox) {
-        //Not sure about this either, maybe should be merged with the one above
         GUI.Box(selectBox, "");
-        CalculateCurrentHealth();
-        GUI.Label(new Rect(selectBox.x, selectBox.y - 7, selectBox.width * healthPercentage, 5), "", healthStyle);
+        CalculateCurrentHealth(0.35f, 0.65f);
+        DrawHealthBar(selectBox, "");
     }
 
     public virtual void MouseClick(GameObject hitObject, Vector3 hitPoint, Player controller) {
@@ -127,14 +132,43 @@ public class World : MonoBehaviour
         return selectionLimits;
     }
 
-    protected virtual void CalculateCurrentHealth() {
+    protected virtual void CalculateCurrentHealth(float lowSplit, float highSplit) {
         healthPercentage = (float)hitPoints / (float)maxHitPoints;
+        if(healthPercentage > highSplit) healthStyle.normal.background = ResourceManager.HealthyTexture;
+        else if(healthPercentage > lowSplit) healthStyle.normal.background = ResourceManager.DamagedTexture;
+        else healthStyle.normal.background = ResourceManager.CriticalTexture;
+    }
 
-        if(healthPercentage > 0.65f) 
-            healthStyle.normal.background = ResourceManager.HealthyTexture;
-        else if(healthPercentage > 0.35f) 
-            healthStyle.normal.background = ResourceManager.DamagedTexture;
-        else 
-            healthStyle.normal.background = ResourceManager.CriticalTexture;
+    protected void DrawHealthBar(Rect selectBox, string label) {
+        healthStyle.padding.top = -20;
+        healthStyle.fontStyle = FontStyle.Bold;
+        GUI.Label(new Rect(selectBox.x, selectBox.y - 7, selectBox.width * healthPercentage, 5), label, healthStyle);
+    }
+
+    public void SetColliders(bool enabled) {
+    Collider[] colliders = GetComponentsInChildren< Collider >();
+    foreach(Collider collider in colliders) collider.enabled = enabled;
+    }
+    
+    public void SetTransparentMaterial(Material material, bool storeExistingMaterial) {
+        if(storeExistingMaterial) oldMaterials.Clear();
+        Renderer[] renderers = GetComponentsInChildren< Renderers >();
+        foreach(Renderer renderer in renderers) {
+            if(storeExistingMaterial) oldMaterials.Add(renderer.material);
+            renderer.material = material;
+        }
+    }
+    
+    public void RestoreMaterials() {
+        Renderer[] renderers = GetComponentsInChildren< Renderers >();
+        if(oldMaterials.Count == renderers.Length) {
+            for(int i = 0; i < renderers.Length; i++) {
+                renderers[i].material = oldMaterials[i];
+            }
+        }
+    }
+    
+    public void SetPlayingArea(Rect playingArea) {
+        this.playingArea = playingArea;
     }
 }

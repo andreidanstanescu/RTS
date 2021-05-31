@@ -342,6 +342,5 @@ public class HUD : MonoBehaviour
     public void updateResources(Dictionary<string, int> r){
         this.resurse = r;
     }
-
-
+    
 }

@@ -30,14 +30,14 @@ public class Vehicle : World
         base.OnGUI();
     }
 
-    public virtual void Init(Building creator) {
+    public virtual void SetBuilding(Building creator) {
     }
 
     public bool free(GameObject destObject){
         return (destObject.name == "Ground");
     }
 
-    public void StartMove(Vector3 destination){
+    public virtual void StartMove(Vector3 destination){
         this.destination = destination;
         moving = true;
         destinationTarget = null;
