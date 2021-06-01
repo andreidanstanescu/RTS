@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &515535660469128970
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 515535660469128971}
+  - component: {fileID: 515535660469128968}
+  m_Layer: 0
+  m_Name: HUD
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &515535660469128971
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515535660469128970}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2, y: 10, z: 2}
+  m_LocalScale: {x: 0.1, y: 2, z: 4}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &515535660469128968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515535660469128970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b724d1c10542de4e986df3294e2c03e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceSkin: {fileID: 11400000, guid: 051d6e1fad5fd564d8b6760db431eb37, type: 2}
+  ordersSkin: {fileID: 11400000, guid: 8cfcf22077a734d499389cc816e4b8e3, type: 2}
+  selectIcon: {fileID: 11400000, guid: 1f1769a4443366048a47f92628229839, type: 2}
+  mouseSkin: {fileID: 11400000, guid: de7db12429d933d49ac9439a1555849a, type: 2}
+  currentTexture: {fileID: 0}
+  attackCursor: {fileID: 2800000, guid: af0d358d113141d408871a69adf294ac, type: 3}
+  moveCursor: {fileID: 2800000, guid: 8fc7eb3462f42234084bdf916da7b154, type: 3}
+  selectCursor: {fileID: 2800000, guid: fadf7810d13399e46a77208354270fd9, type: 3}
+  rallyPointCursor: {fileID: 2800000, guid: c72eef081d8c5c442bd49932f03f26c3, type: 3}
+  harvesterCursor: {fileID: 2800000, guid: 03abf01fb7462d34cac9b95e9f916719, type: 3}
+  manaTexture: {fileID: 2800000, guid: 17f431226a647c04592a6089b549f7fd, type: 3}
+  APTexture: {fileID: 2800000, guid: ad2eb587c19bcfa4cb200c1eb30fe555, type: 3}
+  ADTexture: {fileID: 2800000, guid: 4e4d2150f9c2ce0438e0f2c5c9406ebc, type: 3}
+  buttonHover: {fileID: 2800000, guid: bb66454fe97343a48b84062a40965f38, type: 3}
+  buttonClick: {fileID: 2800000, guid: 126e95612b0197a4187632034788f2ce, type: 3}
+  resourceHealthBars:
+  - {fileID: 2800000, guid: fb6a42314bdd47f4f895513fddfc5a65, type: 3}
+  buildFrame: {fileID: 2800000, guid: f359084b7143e0b459229a75cea2a082, type: 3}
+  buildMask: {fileID: 2800000, guid: d68330ac923f35341ae393d1ad227b85, type: 3}
+  smallButtonHover: {fileID: 2800000, guid: bb66454fe97343a48b84062a40965f38, type: 3}
+  smallButtonClick: {fileID: 2800000, guid: 126e95612b0197a4187632034788f2ce, type: 3}
+  healthy: {fileID: 2800000, guid: c30ab6e362a870144b46bb8ba5aaec3e, type: 3}
+  damaged: {fileID: 2800000, guid: 9f9e9552695a959478883d635b39163c, type: 3}
+  critical: {fileID: 2800000, guid: c0a0a89403dbc95469e3b4dde2bfdb33, type: 3}

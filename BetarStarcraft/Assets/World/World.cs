@@ -19,6 +19,18 @@ public class World : MonoBehaviour
     protected float healthPercentage = 1.0f;
     private List< Material > oldMaterials = new List< Material >();
 
+
+    //attack stuff
+    protected World target = null;
+    protected bool attacking = false;
+    public float weaponRange = 10.0f;
+    protected bool movingIntoPosition = false;
+    protected bool aiming = false;
+    public float weaponRechargeTime = 1.0f;
+    private float currentWeaponChargeTime;
+    public float weaponAimSpeed = 1.0f;
+    //
+
     // protected virtual = cuvant cheie pentru mostenire
 
     //Awake este o functie mostenita din MonoBehaviour
@@ -33,10 +45,22 @@ public class World : MonoBehaviour
         player = transform.root.GetComponentInChildren< Player >();
         actions = new string[GameService.ACTION_LIMITS];
         SetPlayer();
+        if(player) 
+            SetTeamColor();
+    }
+
+    protected void SetTeamColor() {
+        TeamColor[] teamColors = GetComponentsInChildren< TeamColor >();
+        foreach(TeamColor teamColor in teamColors) {
+            Renderer r = teamColor.GetComponent< Renderer >();
+            r.material.color = player.teamColor;
+        }
     }
     
     protected virtual void Update () {
-    
+        currentWeaponChargeTime += Time.deltaTime;
+        if(attacking && !movingIntoPosition && !aiming)
+            PerformAttack();
     }
     
     public void SetPlayer() {
@@ -73,11 +97,37 @@ public class World : MonoBehaviour
 
 
     //obiectul deja selectat de player se va duce undeva
-    public virtual void SelectedDo(GameObject destObject, Vector3 destPoint, Player parent){
-        if(currentlySelected && destPoint != GameService.OutOfBounds && destObject.name != "Ground"){
-            World worldObject = destObject.transform.parent.GetComponent< World >();
-            if(worldObject)
-                iCanChangeTheWorld(worldObject, parent);
+    public virtual void SelectedDo(GameObject hitObject, Vector3 hitPoint, Player controller){
+                //Not sure about this change, fostul SetFlick - Sirbu
+        //Debug.Log("ceva");
+        if(currentlySelected && hitObject && hitObject.name != "Ground") {
+            /*World worldObject = hitObject.transform.parent.GetComponent< World>();
+            if(worldObject) {
+                Resource resource = hitObject.transform.parent.GetComponent< Resource >();
+                if(resource && resource.isEmpty()) return;
+                iCanChangeTheWorld(worldObject, controller);
+            }*/
+             World worldObject = hitObject.transform.parent.GetComponent< World >();
+            //clicked on another selectable object
+            if(worldObject) {
+                //Debug.Log(worldObject.name);
+                Resource resource = hitObject.transform.parent.GetComponent< Resource >();
+                if(resource && resource.isEmpty()) 
+                    return;
+                Player owner = hitObject.transform.root.GetComponent< Player >();
+                if(owner) { //the object is controlled by a player
+                    //Debug.Log(owner.battletag);
+                    if(player && player.is_player) { //this object is controlled by a human player
+                        //start attack if object is not owned by the same player and this object can attack, else select
+                        if(player.battletag != owner.battletag && CanAttack()) {
+                            Debug.Log("ataca cladirea");
+                            BeginAttack(worldObject);
+                        }
+                        //daca nu, atunci player-ul din parametru selecteaza normal obiectul acesta in locul celui curent
+                        else iCanChangeTheWorld(worldObject, controller);
+                    } else iCanChangeTheWorld(worldObject, controller);
+                } else iCanChangeTheWorld(worldObject, controller);
+            }
         }
     }
 
@@ -121,22 +171,150 @@ public class World : MonoBehaviour
     public virtual void SetFlick(GameObject hoverObject) {
         if(player && player.is_player && currentlySelected) {
             if(hoverObject.name != "Ground") {
-                GameService.changeCursor("select");
-                player.hud.SetCustomCursor();
+                
+                Player owner = hoverObject.transform.root.GetComponent< Player >();
+                Vehicle unit = hoverObject.transform.parent.GetComponent< Vehicle >();
+                Building building = hoverObject.transform.parent.GetComponent< Building >();
+                //Debug.Log(CanAttack());
+                if(owner) { //the object is owned by a player
+                    if(owner.battletag == player.battletag) {
+                        GameService.changeCursor("select");
+                        player.hud.SetCustomCursor();
+                    }
+                    else if(CanAttack()) {
+                        GameService.changeCursor("atac");
+                        player.hud.SetCustomCursor();
+                    }
+                    else {
+                        GameService.changeCursor("select");
+                        player.hud.SetCustomCursor();
+                    }
+                } else if( (unit || building) && CanAttack()) {
+                    GameService.changeCursor("atac");
+                    player.hud.SetCustomCursor();
+                }
+                else {
+                    GameService.changeCursor("select");
+                    player.hud.SetCustomCursor();
+                }
             }
         }
     }
 
+    public virtual bool CanAttack() {
+        //default behaviour needs to be overidden by children
+        return false;
+    }
+
+    //respecta MVC
     public virtual void MouseClick(GameObject hitObject, Vector3 hitPoint, Player controller) {
-        //Not sure about this change, fostul SetFlick
+        //Not sure about this change, fostul SetFlick - Sirbu
+        //Debug.Log("ceva");
         if(currentlySelected && hitObject && hitObject.name != "Ground") {
-            World worldObject = hitObject.transform.parent.GetComponent< World>();
+            /*World worldObject = hitObject.transform.parent.GetComponent< World>();
             if(worldObject) {
                 Resource resource = hitObject.transform.parent.GetComponent< Resource >();
                 if(resource && resource.isEmpty()) return;
                 iCanChangeTheWorld(worldObject, controller);
+            }*/
+             World worldObject = hitObject.transform.parent.GetComponent< World >();
+            //clicked on another selectable object
+            if(worldObject) {
+                Debug.Log(worldObject.name);
+                Resource resource = hitObject.transform.parent.GetComponent< Resource >();
+                if(resource && resource.isEmpty()) 
+                    return;
+                Player owner = hitObject.transform.root.GetComponent< Player >();
+                if(owner) { //the object is controlled by a player
+                    Debug.Log(owner.battletag);
+                    if(player && player.is_player) { //this object is controlled by a human player
+                        //start attack if object is not owned by the same player and this object can attack, else select
+                        if(player.battletag != owner.battletag && CanAttack()) {
+                            Debug.Log("ataca cladirea");
+                            BeginAttack(worldObject);
+                        }
+                        //daca nu, atunci player-ul din parametru selecteaza normal obiectul acesta in locul celui curent
+                        else iCanChangeTheWorld(worldObject, controller);
+                    } else iCanChangeTheWorld(worldObject, controller);
+                } else iCanChangeTheWorld(worldObject, controller);
             }
         }
+    }
+
+    private bool TargetInRange() {
+        Vector3 targetLocation = target.transform.position;
+        Vector3 direction = targetLocation - transform.position;
+        if(direction.sqrMagnitude < weaponRange * weaponRange) {
+            return true;
+        }
+        return false;
+    }
+
+    private Vector3 FindNearestAttackPosition() {
+        Vector3 targetLocation = target.transform.position;
+        Vector3 direction = targetLocation - transform.position;
+        float targetDistance = direction.magnitude;
+        float distanceToTravel = targetDistance - (0.9f * weaponRange);
+        return Vector3.Lerp(transform.position, targetLocation, distanceToTravel / targetDistance);
+    }
+
+    private void AdjustPosition() {
+        Vehicle self = this as Vehicle;
+        //conditia asta ne asigura ca nu pot ataca decat vehiculele(deocamdata, am doar turete)
+        if(self) {
+            movingIntoPosition = true;
+            Vector3 attackPosition = FindNearestAttackPosition();
+            self.StartMove(attackPosition);
+            attacking = true;
+        } else attacking = false;
+    }
+
+    protected virtual void BeginAttack(World target) {
+        this.target = target;
+        if(TargetInRange()) {
+            attacking = true;
+            PerformAttack();
+        } 
+        else 
+            AdjustPosition();
+    }
+
+    private void PerformAttack() {
+        if(!target) {
+            attacking = false;
+            return;
+        }
+        if(!TargetInRange()) 
+            AdjustPosition();
+        else if(!TargetInFrontOfWeapon())  
+            AimAtTarget();
+        else if(ReadyToFire()) 
+            UseWeapon();
+    }
+
+    private bool TargetInFrontOfWeapon() {
+        Vector3 targetLocation = target.transform.position;
+        Vector3 direction = targetLocation - transform.position;
+        if(direction.normalized == transform.forward.normalized) 
+            return true;
+        else 
+            return false;
+    }
+
+    protected virtual void AimAtTarget() {
+        aiming = true;
+        //this behaviour needs to be specified by a specific object
+    }
+
+    private bool ReadyToFire() {
+        //Debug.Log(currentWeaponChargeTime);
+        if(currentWeaponChargeTime >= weaponRechargeTime) return true;
+        return false;
+    }
+
+    protected virtual void UseWeapon() {
+        currentWeaponChargeTime = 0.0f;
+        //this behaviour needs to be specified by a specific object
     }
 
     public Bounds GetSelectionBounds() {
@@ -181,5 +359,10 @@ public class World : MonoBehaviour
     
     public void SetPlayingArea(Rect playingArea) {
         this.mapArea = playingArea;
+    }
+
+    public void TakeDamage(int damage) {
+        hitPoints -= damage;
+        if(hitPoints<=0) Destroy(gameObject);
     }
 }

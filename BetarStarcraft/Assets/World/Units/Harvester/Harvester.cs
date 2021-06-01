@@ -16,6 +16,7 @@ public class Harvester : Vehicle {
     protected override void Start () {
         base.Start();
         harvestType = "unknown";
+        //Debug.Log(resourceStore.name);
     }
 
     public override void SetBuilding(Building creator) {

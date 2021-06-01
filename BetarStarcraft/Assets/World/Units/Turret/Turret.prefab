@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8596702105882380304}
   - component: {fileID: 8596702105882380305}
   - component: {fileID: 8596702105882380306}
+  - component: {fileID: 8242627761611050082}
   m_Layer: 0
   m_Name: CorpD
   m_TagString: Untagged
@@ -96,6 +97,18 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8242627761611050082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8596702105882380316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b449f98ef9df1b9449dc72bd46471fb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8596702105966182539
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,6 +121,7 @@ GameObject:
   - component: {fileID: 8596702105966182543}
   - component: {fileID: 8596702105966182536}
   - component: {fileID: 8596702105966182537}
+  - component: {fileID: 1704449302027663633}
   m_Layer: 0
   m_Name: Tun
   m_TagString: Untagged
@@ -123,7 +137,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8596702105966182539}
   m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 3, z: -1}
+  m_LocalPosition: {x: 0, y: 3, z: 1}
   m_LocalScale: {x: 0.45, y: 0.3, z: 0.5}
   m_Children: []
   m_Father: {fileID: 8596702106851831227}
@@ -192,6 +206,18 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!114 &1704449302027663633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8596702105966182539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b449f98ef9df1b9449dc72bd46471fb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8596702105992095093
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,6 +230,7 @@ GameObject:
   - component: {fileID: 8596702105992095113}
   - component: {fileID: 8596702105992095114}
   - component: {fileID: 8596702105992095115}
+  - component: {fileID: 2750501292352260768}
   m_Layer: 0
   m_Name: Tureta
   m_TagString: Untagged
@@ -287,6 +314,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2750501292352260768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8596702105992095093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b449f98ef9df1b9449dc72bd46471fb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8596702106020954915
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,6 +338,7 @@ GameObject:
   - component: {fileID: 8596702106020954919}
   - component: {fileID: 8596702106020954912}
   - component: {fileID: 8596702106020954913}
+  - component: {fileID: 6196825060956362044}
   m_Layer: 0
   m_Name: CorpS
   m_TagString: Untagged
@@ -383,6 +423,18 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6196825060956362044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8596702106020954915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b449f98ef9df1b9449dc72bd46471fb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8596702106423246955
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,6 +447,7 @@ GameObject:
   - component: {fileID: 8596702106423246959}
   - component: {fileID: 8596702106423246952}
   - component: {fileID: 8596702106423246953}
+  - component: {fileID: 1067348575778309995}
   m_Layer: 0
   m_Name: Baza
   m_TagString: Untagged
@@ -478,6 +531,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1067348575778309995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8596702106423246955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b449f98ef9df1b9449dc72bd46471fb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8596702106851831205
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,6 +553,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8596702106851831227}
   - component: {fileID: 8596702106851831204}
+  - component: {fileID: -7718021875091380196}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Untagged
@@ -529,6 +595,17 @@ MonoBehaviour:
   name: Tureta
   image: {fileID: 2800000, guid: 51cf951bc25f68b41b8a374be921f682, type: 3}
   cost: 0
-  sellValue: 0
   hitPoints: 0
   maxHitPoints: 0
+  weaponRange: 10
+  weaponRechargeTime: 1
+  weaponAimSpeed: 1
+  rotateSpeed: 2
+--- !u!222 &-7718021875091380196
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8596702106851831205}
+  m_CullTransparentMesh: 1

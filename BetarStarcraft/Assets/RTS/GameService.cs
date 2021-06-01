@@ -62,7 +62,7 @@ namespace RTS {
 
         public static int BuildSpeed { get { return 2; } }
 
-        public static float getSpeedMovement { get { return 5; }}
+        public static float getSpeedMovement { get { return 8; }}
 
         public static int ORDERS_BAR_WIDTH = 150, RESOURCE_BAR_HEIGHT = 40;
 

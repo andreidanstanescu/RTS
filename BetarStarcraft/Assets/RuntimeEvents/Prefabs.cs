@@ -60,6 +60,7 @@ public class Prefabs : MonoBehaviour
 
     public GameObject extractWorldObject(string name) {
         foreach(GameObject worldObject in worldObjects) {
+            //Debug.Log(worldObject.name);
             if(worldObject.name == name) return worldObject;
         }
         return null;

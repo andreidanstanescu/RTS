@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 {
     public string battletag;
     public bool is_player;
+    public Color teamColor;
     public HUD hud;
     public World SelectedObject { get; set;}
     //public int mana, abilityPower;
