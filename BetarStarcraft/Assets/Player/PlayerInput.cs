@@ -23,6 +23,9 @@ public class PlayerInput : MonoBehaviour
         //vrem sa putem misca camera liber
         if(jucator.is_player){
             //Debug.Log("Jucator\n");
+            if(Input.GetKeyDown(KeyCode.Escape)) 
+                OpenPauseMenu();
+
             Misca();
 
             MouseCapture();
@@ -30,6 +33,14 @@ public class PlayerInput : MonoBehaviour
 
             MouseControl();
         }
+    }
+
+    private void OpenPauseMenu() {
+        Time.timeScale = 0.0f;
+        GetComponentInChildren< PauseMenu >().enabled = true;
+        GetComponent< PlayerInput >().enabled = false;
+        Cursor.visible = true;
+        GameService.MenuOpen = true;
     }
 
     private void Misca(){
@@ -207,7 +218,7 @@ public class PlayerInput : MonoBehaviour
                         jucator.SelectedObject.SetFlick(gotoObject);
                     if(gotoObject.name == "Ground")
                         return;
-                    Player alt_jucator = null;
+                    Player? alt_jucator = null;
                     try{
                         alt_jucator = gotoObject.transform.parent.GetComponent< Player >();
                     }

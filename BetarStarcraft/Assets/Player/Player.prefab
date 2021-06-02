@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 4738665284967114747}
   - component: {fileID: 4738665284967114744}
   - component: {fileID: 4738665284967114745}
+  - component: {fileID: 5573972623180116030}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -97,7 +98,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4738665284967114726}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -158,6 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battletag: NotEvenSpark
   is_player: 1
+  teamColor: {r: 0, g: 0, b: 0, a: 0}
   hud: {fileID: 0}
   notAllowedMaterial: {fileID: 2100000, guid: e672cf4ef17605a45b4f2f1e7816b37b, type: 2}
   allowedMaterial: {fileID: 2100000, guid: a3993ef84488d324897d8ff2734753cf, type: 2}
@@ -173,6 +175,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a72ade5bdb5d68b4a9cb620fe9e93000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5573972623180116030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4738665284967114726}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8df86f2a01e803f43a2884a462f81e2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mySkin: {fileID: 11400000, guid: fed870c2a07187242af7ee588e7aebe0, type: 2}
+  header: {fileID: 2800000, guid: 31682f4569badca4c817870e1db0422a, type: 3}
 --- !u!1 &4738665285451654085
 GameObject:
   m_ObjectHideFlags: 0

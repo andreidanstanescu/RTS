@@ -31,7 +31,7 @@ public class Turret : Vehicle
         base.UseWeapon();
         Vector3 spawnPoint = transform.position;
         spawnPoint.x += (2.1f * transform.forward.x);
-        spawnPoint.y += 2.5f;
+        spawnPoint.y += 3.5f;
         spawnPoint.z += (2.1f * transform.forward.z);
         //Debug.Log("creez proiectil");
         GameObject gameObject = (GameObject)Instantiate(GameService.extractWorldObject("Glont"), spawnPoint, transform.rotation);

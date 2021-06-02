@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    public void Start(){
+        Cursor.visible = true;
+    }
     // Start is called before the first frame update
     public void PlayGame ()
     {

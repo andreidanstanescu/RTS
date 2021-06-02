@@ -78,6 +78,23 @@ namespace RTS {
         public static Texture2D DamagedTexture { get { return damagedTexture; } }
         public static Texture2D CriticalTexture { get { return criticalTexture; } }
 
+
+        //MENIU
+
+        private static float buttonHeight = 40;
+        private static float headerHeight = 32, headerWidth = 256;
+        private static float textHeight = 25, padding = 10;
+        public static float PauseMenuHeight { get { return headerHeight + 2 * buttonHeight + 4 * padding; } }
+        public static float MenuWidth { get { return headerWidth + 2 * padding; } }
+        public static float ButtonHeight { get { return buttonHeight; } }
+        public static float ButtonWidth { get { return (MenuWidth - 3 * padding) / 2; } }
+        public static float HeaderHeight { get { return headerHeight; } }
+        public static float HeaderWidth { get { return headerWidth; } }
+        public static float TextHeight { get { return textHeight; } }
+        public static float Padding { get { return padding; } }
+
+        //END_MENIU
+        
         //END_TEXTURES
 
         public static GUISkin selectIcon;
@@ -89,6 +106,9 @@ namespace RTS {
         public static void changeCursor(string other){
             tipCursor = other;
         }
+
+        	
+        public static bool MenuOpen { get; set; }
 
         /*public struct TipCursor{
             public TipCursor(double x, double y)
