@@ -3,15 +3,17 @@ using RTS;
  
 public class SelectPlayerMenu : MonoBehaviour {
      
-    public GUISkin mySkin;
+    public GUISkin mySkin, selectionSkin;
      
     private string playerName = "NewPlayer";
     public Texture2D[] avatars;
     private int avatarIndex = -1;
     
     void Start(){
+        PlayerManager.Load();
         if(avatars.Length > 0) avatarIndex = 0;
         PlayerManager.SetAvatarTextures(avatars);
+        SelectionList.LoadEntries(PlayerManager.GetPlayerNames());
     }
 
     void OnGUI() {
@@ -36,7 +38,7 @@ public class SelectPlayerMenu : MonoBehaviour {
         float textTop = menuHeight - 2 * GameService.Padding - GameService.ButtonHeight - GameService.TextHeight;
         float textWidth = GameService.MenuWidth - 2 * GameService.Padding;
         playerName = GUI.TextField(new Rect(GameService.Padding, textTop, textWidth, GameService.TextHeight), playerName, 32);
-        
+        SelectionList.SetCurrentEntry(playerName);
         if(avatarIndex >= 0) {
             float avatarLeft = GameService.MenuWidth / 2 - avatars[avatarIndex].width / 2;
             float avatarTop = textTop - GameService.Padding - avatars[avatarIndex].height;
@@ -54,16 +56,34 @@ public class SelectPlayerMenu : MonoBehaviour {
                 avatarIndex = (avatarIndex+1) % avatars.Length;
             }
         }
-        
+       
         GUI.EndGroup();
+
+        //selection list, needs to be called outside of the group for the menu
+        string prevSelection = SelectionList.GetCurrentEntry();
+        float selectionLeft = groupRect.x + GameService.Padding;
+        float selectionTop = groupRect.y + GameService.Padding;
+        float selectionWidth = groupRect.width - 2 * GameService.Padding;
+        float selectionHeight = groupRect.height - GetMenuItemsHeight() - GameService.Padding;
+        SelectionList.Draw(selectionLeft, selectionTop, selectionWidth, selectionHeight, selectionSkin);
+        string newSelection = SelectionList.GetCurrentEntry();
+        //set saveName to be name selected in list if selection has changed
+        if(prevSelection != newSelection) {
+            playerName = newSelection;
+            avatarIndex = PlayerManager.GetAvatar(playerName);
+        }
     }
      
-    private float GetMenuHeight() {
-        float avatarHeight = 0;
-        if(avatars.Length > 0) avatarHeight = avatars[0].height + 2 * GameService.Padding;
-        return avatarHeight + GameService.ButtonHeight + GameService.TextHeight + 3 * GameService.Padding;
-    }
-     
+   private float GetMenuHeight() {
+		return 250 + GetMenuItemsHeight();
+	}
+	
+	private float GetMenuItemsHeight() {
+		float avatarHeight = 0;
+		if(avatars.Length > 0) avatarHeight = avatars[0].height + 2 * GameService.Padding;
+		return avatarHeight + GameService.ButtonHeight + GameService.TextHeight + 3 * GameService.Padding;
+	}
+
     private void SelectPlayer() {
         PlayerManager.SelectPlayer(playerName, avatarIndex);
         GetComponent< SelectPlayerMenu >().enabled = false;
