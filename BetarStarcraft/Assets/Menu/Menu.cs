@@ -30,6 +30,12 @@ public class Menu : MonoBehaviour {
         //header image
         GUI.DrawTexture(new Rect(GameService.Padding, GameService.Padding, GameService.HeaderWidth, GameService.HeaderHeight), header);
     
+        //welcome message(dosent work)
+        //float leftPos = GameService.MenuWidth / 2 - GameService.ButtonWidth / 2;
+        //float topPos = 2 * GameService.Padding + header.height;
+        //GUI.Label(new Rect(leftPos, topPos, GameService.MenuWidth - 2 * GameService.Padding, GameService.TextHeight), "Salut! " + PlayerManager.GetPlayerName());
+
+    
         //menu buttons
         float leftPos = GameService.MenuWidth / 2 - GameService.ButtonWidth / 2;
         float topPos = 2 * GameService.Padding + GameService.HeaderHeight;
@@ -55,11 +61,12 @@ public class Menu : MonoBehaviour {
     }
  
     protected virtual float GetMenuHeight() {
+        float messageHeight = GameService.TextHeight + GameService.Padding;
         float buttonHeight = 0;
         if(buttons != null) buttonHeight = buttons.Length * GameService.ButtonHeight;
         float paddingHeight = 2 * GameService.Padding;
         if(buttons != null) paddingHeight += buttons.Length * GameService.Padding;
-        return GameService.HeaderHeight + buttonHeight + paddingHeight;
+        return GameService.HeaderHeight + buttonHeight + paddingHeight + messageHeight;
     }
  
     protected void ExitGame() {

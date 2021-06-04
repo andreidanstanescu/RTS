@@ -18,6 +18,7 @@ public class HUD : MonoBehaviour
     private int buildAreaHeight = 0;
     //skinurile afisate pe ecran
     public GUISkin resourceSkin, ordersSkin, selectIcon, mouseSkin;
+    public GUISkin playerDetailsSkin;
 
     public Dictionary<string, int> resurse;
     public Dictionary<string, Texture2D> resourceTextures;
@@ -163,6 +164,7 @@ public class HUD : MonoBehaviour
     {
         if(player.is_player) {
             //Debug.Log("da");
+            DrawPlayerDetails();
             DrawOrdersBar();
             DrawResourcesBar();
             UpdateMouse();
@@ -350,5 +352,23 @@ public class HUD : MonoBehaviour
     public void updateResources(Dictionary<string, int> r){
         this.resurse = r;
     }
-    
+
+    private void DrawPlayerDetails() {
+        GUI.skin = playerDetailsSkin;
+        GUI.BeginGroup(new Rect(0, 0, Screen.width, Screen.height));
+        float height = GameService.TextHeight;
+        float leftPos = GameService.Padding;
+        float topPos = Screen.height - height - GameService.Padding;
+        Texture2D avatar = PlayerManager.GetPlayerAvatar();
+        if(avatar) {
+            //we want the texture to be drawn square at all times
+            GUI.DrawTexture(new Rect(leftPos, topPos, height, height), avatar);
+            leftPos += height + GameService.Padding;
+        }
+        float minWidth = 0, maxWidth = 0;
+        string playerName = PlayerManager.GetPlayerName();
+        playerDetailsSkin.GetStyle("label").CalcMinMaxWidth(new GUIContent(playerName), out minWidth, out maxWidth);
+        GUI.Label(new Rect(leftPos, topPos, maxWidth, height), playerName);
+        GUI.EndGroup();
+    }
 }
