@@ -48,7 +48,7 @@ public class Harvester : Vehicle {
  
     protected override void Update () {
         base.Update();
-        if(!moving) {
+        if(!moving && !rotating) {
             if(harvesting || emptying) {
                 //Debug.Log("apar brate");
                 Arms[] arms = GetComponentsInChildren< Arms >();

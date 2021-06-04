@@ -41,13 +41,17 @@ namespace RTS {
         public static string GetPlayerName() {
             return currentPlayer.Name == "" ? "Unknown" : currentPlayer.Name;
         }
+        
         public static void SetAvatarTextures(Texture2D[] avatarTextures) {
             avatars = avatarTextures;
         }
+
         public static Texture2D GetPlayerAvatar() {
-            if(currentPlayer.Avatar >= 0 && currentPlayer.Avatar < avatars.Length) return avatars[currentPlayer.Avatar];
+            if(currentPlayer.Avatar >= 0 && currentPlayer.Avatar < avatars.Length) 
+                return avatars[currentPlayer.Avatar];
             return null;
         }
+
         public static void Save() {
             JsonSerializer serializer = new JsonSerializer();
             serializer.NullValueHandling = NullValueHandling.Ignore;

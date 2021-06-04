@@ -9,7 +9,7 @@ public class Flag : MonoBehaviour
         foreach(Renderer renderer in renderers) 
             renderer.enabled = true;
         //this.SetActive(true);
-        Debug.Log("apare");
+        //Debug.Log("apare");
     }
  
     public void Disable () {

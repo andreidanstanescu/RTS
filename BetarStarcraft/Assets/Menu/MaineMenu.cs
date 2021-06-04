@@ -6,7 +6,7 @@ using RTS;
 public class MaineMenu : Menu
 {
     public void Update(){
-        Cursor.visible = true;
+        //Cursor.visible = true;
     }
     
     protected override void SetButtons () {

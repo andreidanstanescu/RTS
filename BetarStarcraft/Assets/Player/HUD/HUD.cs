@@ -164,10 +164,10 @@ public class HUD : MonoBehaviour
     {
         if(player.is_player) {
             //Debug.Log("da");
-            DrawPlayerDetails();
             DrawOrdersBar();
             DrawResourcesBar();
             UpdateMouse();
+            DrawPlayerDetails();
         }
     }
 
@@ -236,6 +236,7 @@ public class HUD : MonoBehaviour
     private void DrawResourcesBar() {
         GUI.skin = resourceSkin;
         GUI.Box(new Rect(0,0,Screen.width,RESOURCE_BAR_HEIGHT),"Resurse curente:");
+        //Debug.Log("apar resurse");
         GUI.BeginGroup(new Rect(0,0,Screen.width,RESOURCE_BAR_HEIGHT));
         int topPos = 4, iconLeft = 4, textLeft = 20;
         DrawResourceIcon("mana", iconLeft, textLeft, topPos);
