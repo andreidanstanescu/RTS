@@ -23,22 +23,22 @@ public class Menu : MonoBehaviour {
     
         float groupLeft = Screen.width / 2 - GameService.MenuWidth / 2;
         float groupTop = Screen.height / 2 - GameService.PauseMenuHeight / 2;
-        GUI.BeginGroup(new Rect(groupLeft, groupTop, GameService.MenuWidth, GameService.PauseMenuHeight));
+        GUI.BeginGroup(new Rect(groupLeft, groupTop, GameService.MenuWidth, GameService.PauseMenuHeight + 85));
     
         //background box
-        GUI.Box(new Rect(0, 0, GameService.MenuWidth, GameService.PauseMenuHeight), "");
+        GUI.Box(new Rect(0, 0, GameService.MenuWidth, GameService.PauseMenuHeight + 85), "");
         //header image
         GUI.DrawTexture(new Rect(GameService.Padding, GameService.Padding, GameService.HeaderWidth, GameService.HeaderHeight), header);
     
         //welcome message(dosent work)
-        //float leftPos = GameService.MenuWidth / 2 - GameService.ButtonWidth / 2;
-        //float topPos = 2 * GameService.Padding + header.height;
-        //GUI.Label(new Rect(leftPos, topPos, GameService.MenuWidth - 2 * GameService.Padding, GameService.TextHeight), "Salut! " + PlayerManager.GetPlayerName());
+        float leftPos = GameService.MenuWidth / 2 - GameService.ButtonWidth / 2;
+        float topPos = 2 * GameService.Padding + GameService.HeaderHeight;
+        GUI.Label(new Rect(leftPos, topPos, GameService.MenuWidth - 2 * GameService.Padding, GameService.TextHeight), "  Salut, " + PlayerManager.GetPlayerName());
 
     
         //menu buttons
-        float leftPos = GameService.MenuWidth / 2 - GameService.ButtonWidth / 2;
-        float topPos = 2 * GameService.Padding + GameService.HeaderHeight;
+        leftPos = GameService.MenuWidth / 2 - GameService.ButtonWidth / 2;
+        topPos += GameService.TextHeight + GameService.Padding;
 
         for(int i = 0; i < buttons.Length; i++) {
             //Debug.Log(buttons[i]);

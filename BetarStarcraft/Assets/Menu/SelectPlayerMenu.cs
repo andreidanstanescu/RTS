@@ -31,6 +31,12 @@ public class SelectPlayerMenu : MonoBehaviour {
         //menu buttons
         float leftPos = GameService.MenuWidth / 2 - GameService.ButtonWidth / 2;
         float topPos = menuHeight - GameService.Padding - GameService.ButtonHeight;
+
+        if(SelectionList.MouseDoubleClick()) {
+            playerName = SelectionList.GetCurrentEntry();
+            SelectPlayer();
+        }
+
         if(GUI.Button(new Rect(leftPos, topPos, GameService.ButtonWidth, GameService.ButtonHeight), "Select")) {
             SelectPlayer();
         }

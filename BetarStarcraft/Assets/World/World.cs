@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 using RTS;
 
 public class World : MonoBehaviour
 {
-    public string name;
+    //public string name;
+    public string objectName = "WorldObject";
     public Texture2D image;
     public int cost, hitPoints, maxHitPoints;
 
@@ -18,7 +20,7 @@ public class World : MonoBehaviour
     protected GUIStyle healthStyle = new GUIStyle();
     protected float healthPercentage = 1.0f;
     private List< Material > oldMaterials = new List< Material >();
-
+    public int ObjectId { get; set; }
 
     //attack stuff
     protected World target = null;
@@ -364,5 +366,23 @@ public class World : MonoBehaviour
     public void TakeDamage(int damage) {
         hitPoints -= damage;
         if(hitPoints<=0) Destroy(gameObject);
+    }
+
+    public virtual void SaveDetails(JsonWriter writer) {
+        SaveManager.WriteString(writer, "Type", name);
+        SaveManager.WriteString(writer, "Name", objectName);
+        SaveManager.WriteInt(writer, "Id", ObjectId);
+        SaveManager.WriteVector(writer, "Position", transform.position);
+        SaveManager.WriteQuaternion(writer, "Rotation", transform.rotation);
+        SaveManager.WriteVector(writer, "Scale", transform.localScale);
+        SaveManager.WriteInt(writer, "HitPoints", hitPoints);
+        SaveManager.WriteBoolean(writer, "Attacking", attacking);
+        SaveManager.WriteBoolean(writer, "MovingIntoPosition", movingIntoPosition);
+        SaveManager.WriteBoolean(writer, "Aiming", aiming);
+        if(attacking) {
+            //only save if attacking so that we do not end up storing massive numbers for no reason
+            SaveManager.WriteFloat(writer, "CurrentWeaponChargeTime", currentWeaponChargeTime);
+        }
+        if(target != null) SaveManager.WriteInt(writer, "TargetId", target.ObjectId);
     }
 }

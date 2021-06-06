@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 using RTS;
 
 public class Building : World
@@ -196,5 +197,13 @@ public class Building : World
             RestoreMaterials();
             SetTeamColor();
         }
+    }
+    public override void SaveDetails (JsonWriter writer) {
+        base.SaveDetails (writer);
+        SaveManager.WriteBoolean(writer, "NeedsBuilding", needsBuilding);
+        SaveManager.WriteVector(writer, "SpawnPoint", spawnPoint);
+        SaveManager.WriteVector(writer, "RallyPoint", flagPosition);
+        SaveManager.WriteFloat(writer, "BuildProgress", currentBuildProgress);
+        SaveManager.WriteStringArray(writer, "BuildQueue", buildQueue.ToArray());
     }
 }

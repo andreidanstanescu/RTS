@@ -69,6 +69,7 @@ namespace RTS {
         public static Prefabs playObjects = null;
 
         private static Dictionary< string, Texture2D > resourceHealthBarTextures;
+        public static string LevelName { get; set; }
         //END_CONSTANTE
 
         // Textures for HP bar
@@ -257,6 +258,10 @@ namespace RTS {
                 return hit.collider.gameObject;
             return null;
         }
-    
+        public static int GetNewObjectId() {
+            LevelLoader loader = (LevelLoader)GameObject.FindObjectOfType(typeof(LevelLoader));
+            if(loader) return loader.GetNewObjectId();
+            return -1;
+        } 
     }
 }

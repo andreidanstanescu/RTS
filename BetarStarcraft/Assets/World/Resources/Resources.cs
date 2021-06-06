@@ -1,5 +1,6 @@
 using UnityEngine;
 using RTS;
+using Newtonsoft.Json;
  
 public class Resource : World {
  
@@ -30,5 +31,10 @@ public class Resource : World {
     protected override void CalculateCurrentHealth (float lowSplit, float highSplit) {
         healthPercentage = amountLeft / capacity;
         healthStyle.normal.background = GameService.GetResourceHealthBar(resourceType);
+    }
+
+    public override void SaveDetails (JsonWriter writer) {
+        base.SaveDetails (writer);
+        SaveManager.WriteFloat(writer, "AmountLeft", amountLeft);
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 using RTS;
 
 public class Vehicle : World
@@ -184,5 +185,16 @@ public class Vehicle : World
             }
         }
     }
-    
+    public override void SaveDetails (JsonWriter writer) {
+        base.SaveDetails (writer);
+        SaveManager.WriteBoolean(writer, "Moving", moving);
+        SaveManager.WriteBoolean(writer, "Rotating", rotating);
+        SaveManager.WriteVector(writer, "Destination", destination);
+        SaveManager.WriteQuaternion(writer, "TargetRotation", targetRotation);
+        if(destinationTarget) {
+            World destinationObject = destinationTarget.GetComponent< World >();
+            if(destinationObject) SaveManager.WriteInt(writer, "DestinationTargetId", destinationObject.ObjectId);
+        }
+    }
+        
 }

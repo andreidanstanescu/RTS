@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 using RTS;
 
 public class Turret : Vehicle
@@ -48,6 +49,10 @@ public class Turret : Vehicle
     protected override void AimAtTarget () {
         base.AimAtTarget();
         aimRotation = Quaternion.LookRotation(target.transform.position - transform.position);
+    }
+    public override void SaveDetails (JsonWriter writer) {
+        base.SaveDetails (writer);
+        SaveManager.WriteQuaternion(writer, "AimRotation", aimRotation);
     }
     
 }

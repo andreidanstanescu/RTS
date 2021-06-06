@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 using RTS;
 
 public class Player : MonoBehaviour
@@ -75,6 +76,7 @@ public class Player : MonoBehaviour
             //Debug.Log("adaug vehicul");
         }
         if(unitObject) {
+            unitObject.ObjectId = GameService.GetNewObjectId();
             unitObject.SetBuilding(creator);
             if(spawnPoint != rallyPoint) 
                 unitObject.StartMove(rallyPoint);
@@ -85,6 +87,7 @@ public class Player : MonoBehaviour
         GameObject newBuilding = (GameObject)Instantiate(GameService.extractBuilding(buildingName), buildPoint, new Quaternion());
         tempBuilding = newBuilding.GetComponent< Building >();
         if (tempBuilding) {
+            tempBuilding.ObjectId = GameService.GetNewObjectId();
             tempCreator = creator;
             findingPlacement = true;
             tempBuilding.SetTransparentMaterial(notAllowedMaterial, true);
@@ -153,5 +156,14 @@ public class Player : MonoBehaviour
         Destroy(tempBuilding.gameObject);
         tempBuilding = null;
         tempCreator = null;
+    }
+
+    public virtual void SaveDetails(JsonWriter writer) {
+        SaveManager.WriteString(writer, "Username", battletag);
+        SaveManager.WriteBoolean(writer, "Human", is_player);
+        SaveManager.WriteColor(writer, "TeamColor", teamColor);
+        SaveManager.SavePlayerResources(writer, resurse);
+        SaveManager.SavePlayerBuildings(writer, GetComponentsInChildren< Building >());
+        SaveManager.SavePlayerUnits(writer, GetComponentsInChildren< Vehicle >());
     }
 }
