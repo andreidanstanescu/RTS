@@ -194,6 +194,7 @@ public class HUD : MonoBehaviour
             displaySelected = player.SelectedObject.name;
             if(player.SelectedObject.IsOwnedBy(player)) {
                 //reset slider value if the selected object has changed
+                //Debug.Log(player.SelectedObject.name);
                 if(lastSelection && lastSelection != player.SelectedObject) 
                     sliderValue = 0.0f;
                 DrawActions(player.SelectedObject.GetActions());
@@ -263,10 +264,17 @@ public class HUD : MonoBehaviour
         
         if(GUI.Button(menuButtonPosition, "Menu")) {
             Time.timeScale = 0.0f;
-            PauseMenu pauseMenu = GetComponent< PauseMenu >();
-            if(pauseMenu) pauseMenu.enabled = true;
+            //Debug.Log("buton meniu");
             PlayerInput PlayerInput = player.GetComponent< PlayerInput >();
-            if(PlayerInput) PlayerInput.enabled = false;
+            if(PlayerInput) {
+                PlayerInput.enabled = false;
+                //Debug.Log("ceva2");
+            }
+            PauseMenu pauseMenu = PlayerInput.GetComponentInChildren< PauseMenu >();
+            if(pauseMenu) {
+                pauseMenu.enabled = true;
+                Debug.Log("ceva");
+            }
             PlayClick();
         }
         GUI.EndGroup();
@@ -305,6 +313,7 @@ public class HUD : MonoBehaviour
             DrawSlider(buildAreaHeight, numActions / 2.0f);
         //display possible actions as buttons and handle the button click for each
         for(int i = 0; i < numActions; i++) {
+            
             int column = i % 2 + ACTION_IMAGE_WIDTH;
             int row = i / 2 + ACTION_IMAGE_HEIGHT;
             Rect pos = GetButtonPos(row, column);
@@ -400,6 +409,7 @@ public class HUD : MonoBehaviour
         GUI.EndGroup();
     }
     private void PlayClick() {
-        if(audioElement != null) audioElement.Play(clickSound);
+        if(audioElement != null) 
+            audioElement.Play(clickSound);
     }
 }

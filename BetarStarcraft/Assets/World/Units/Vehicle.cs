@@ -78,7 +78,7 @@ public class Vehicle : World
         movingIntoPosition = false;
         transform.position = Vector3.MoveTowards(transform.position, destination, Time.deltaTime * GameService.getSpeedMovement);
         if(transform.position == destination) {
-            if(audioElement != null) audioElement.Play(driveSound);
+            if(audioElement != null) audioElement.Stop(driveSound);
             moving = false;
             movingIntoPosition = false;
         }

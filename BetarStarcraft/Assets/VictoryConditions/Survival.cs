@@ -12,6 +12,7 @@ public class Survival : VictoryCondition {
     }
      
     void Update() {
+        //Debug.Log(timeLeft);
         timeLeft -= Time.deltaTime;
     }
      
@@ -27,6 +28,7 @@ public class Survival : VictoryCondition {
     }
      
     public override bool PlayerMeetsConditions (Player player) {
+        //Debug.Log(player && player.is_player && !player.IsDead());
         return player && player.is_player && !player.IsDead();
     }
 }

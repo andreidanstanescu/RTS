@@ -8,9 +8,10 @@ public class Hut : Building
     void Start()
     {
         base.Start();
-        actions[0] = "Tureta";
-        actions[1] = "Tureta";
-        actions[2] = "Tureta";
+        actions = new string[3];
+        actions[0] = "Turret";
+        actions[1] = "Turret";
+        actions[2] = "Turret";
     }
 
     // Update is called once per frame

@@ -592,7 +592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 418ec556c806d3746b9e9ddb04e87484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: WorldObject
+  objectName: Tureta
   image: {fileID: 2800000, guid: 51cf951bc25f68b41b8a374be921f682, type: 3}
   cost: 0
   hitPoints: 0
