@@ -24,6 +24,8 @@ public class LevelLoader : MonoBehaviour {
      
     void OnLevelWasLoaded() {
         if(initialised) {
+            Time.timeScale = 1.0f;
+            GameService.MenuOpen = false;
             if(GameService.LevelName != null && GameService.LevelName != "") {
                 LoadManager.LoadGame(GameService.LevelName);
             } else {

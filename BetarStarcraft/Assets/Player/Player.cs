@@ -174,5 +174,12 @@ public class Player : MonoBehaviour
         }
         return null;
     }
+    public bool IsDead() {
+        Building[] buildings = GetComponentsInChildren< Building >();
+        Vehicle[] units = GetComponentsInChildren< Vehicle >();
+        if(buildings != null && buildings.Length > 0) return false;
+        if(units != null && units.Length > 0) return false;
+        return true;
+    }
 
 }
