@@ -1,16 +1,28 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using RTS;
  
 public class Menu : MonoBehaviour {
  
     public GUISkin mySkin;
     public Texture2D header;
+    public AudioClip clickSound;
+    public float clickVolume = 1.0f;
+ 
+private AudioElement audioElement;
  
     protected string[] buttons;
  
     protected virtual void Start () {
         SetButtons();
+        if(clickVolume < 0.0f) clickVolume = 0.0f;
+        if(clickVolume > 1.0f) clickVolume = 1.0f;
+        List< AudioClip > sounds = new List< AudioClip >();
+        List< float> volumes = new List< float >();
+        sounds.Add(clickSound);
+        volumes.Add (clickVolume);
+        audioElement = new AudioElement(sounds, volumes, "Menu", null);
     }
  
     protected virtual void OnGUI() {
@@ -23,7 +35,7 @@ public class Menu : MonoBehaviour {
     
         float groupLeft = Screen.width / 2 - GameService.MenuWidth / 2;
         float groupTop = Screen.height / 2 - GameService.PauseMenuHeight / 2;
-        GUI.BeginGroup(new Rect(groupLeft, groupTop, GameService.MenuWidth, GameService.PauseMenuHeight + 85));
+        GUI.BeginGroup(new Rect(groupLeft, groupTop, GameService.MenuWidth, GameService.PauseMenuHeight + 155));
     
         //background box
         GUI.Box(new Rect(0, 0, GameService.MenuWidth, GameService.PauseMenuHeight + 85), "");
@@ -57,6 +69,7 @@ public class Menu : MonoBehaviour {
     }
  
     protected virtual void HandleButton(string text) {
+        if(audioElement != null) audioElement.Play(clickSound);
         //a child class needs to set this to handle button clicks
     }
  
@@ -67,6 +80,17 @@ public class Menu : MonoBehaviour {
         float paddingHeight = 2 * GameService.Padding;
         if(buttons != null) paddingHeight += buttons.Length * GameService.Padding;
         return GameService.HeaderHeight + buttonHeight + paddingHeight + messageHeight;
+    }
+    protected void LoadGame() {
+        HideCurrentMenu();
+        LoadMenu loadMenu = GetComponent< LoadMenu >();
+        if(loadMenu) {
+            loadMenu.enabled = true;
+            loadMenu.Activate();
+        }
+    }
+    protected virtual void HideCurrentMenu() {
+        //a child class needs to set this to hide itself when appropriate
     }
  
     protected void ExitGame() {

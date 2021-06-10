@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using RTS;
 
 public class Worker : Vehicle
@@ -10,6 +11,8 @@ public class Worker : Vehicle
     private Building currentProject;
     private bool building = false;
     private float amountBuilt = 0.0f;
+    public AudioClip finishedJobSound;
+    public float finishedJobVolume = 1.0f;
 
     /*** Game Engine methods, all can be overridden by subclass ***/
 
@@ -28,7 +31,10 @@ public class Worker : Vehicle
                 if(amount > 0) {
                     amountBuilt -= amount;
                     currentProject.Construct(amount);
-                    if(!currentProject.UnderConstruction()) building = false;
+                    if(!currentProject.UnderConstruction()) {
+                        building = false;
+                        if(audioElement != null) audioElement.Play(finishedJobSound);
+                    }
                 }
             }
         }
@@ -82,5 +88,16 @@ public class Worker : Vehicle
         SaveManager.WriteBoolean(writer, "Building", building);
         SaveManager.WriteFloat(writer, "AmountBuilt", amountBuilt);
         if(currentProject) SaveManager.WriteInt(writer, "CurrentProjectId", currentProject.ObjectId);
+    }
+
+    protected override void InitialiseAudio () {
+        base.InitialiseAudio ();
+        if(finishedJobVolume < 0.0f) finishedJobVolume = 0.0f;
+        if(finishedJobVolume > 1.0f) finishedJobVolume = 1.0f;
+        List< AudioClip > sounds = new List< AudioClip >();
+        List< float > volumes = new List< float >();
+        sounds.Add(finishedJobSound);
+        volumes.Add (finishedJobVolume);
+        audioElement.Add(sounds, volumes);
     }
 }

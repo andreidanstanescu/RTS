@@ -11,8 +11,9 @@ public class Resource : World {
  
     protected override void Start () {
         base.Start();
+        resourceType = "Unknown";
+        if(loadedSavedValues) return;
         amountLeft = capacity;
-        resourceType = "unknown";
     }
  
     public void Remove(float amount) {
@@ -36,5 +37,12 @@ public class Resource : World {
     public override void SaveDetails (JsonWriter writer) {
         base.SaveDetails (writer);
         SaveManager.WriteFloat(writer, "AmountLeft", amountLeft);
+    }
+    protected override void HandleLoadedProperty (JsonTextReader reader, string propertyName, object readValue) {
+        base.HandleLoadedProperty (reader, propertyName, readValue);
+        switch(propertyName) {
+            case "AmountLeft": amountLeft = (float)(double)readValue; break;
+            default: break;
+        }
     }
 }

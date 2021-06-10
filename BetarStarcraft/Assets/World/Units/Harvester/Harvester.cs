@@ -1,5 +1,6 @@
 using UnityEngine;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using RTS;
  
 public class Harvester : Vehicle {
@@ -12,6 +13,8 @@ public class Harvester : Vehicle {
     private Resource resourceDeposit;
     public Building resourceStore;
     public float collectionAmount, depositAmount;
+    public AudioClip emptyHarvestSound, harvestSound, startHarvestSound;
+    public float emptyHarvestVolume = 0.5f, harvestVolume = 0.5f, startHarvestVolume = 1.0f;
     private float currentDeposit = 0.0f;
  
     protected override void Start () {
@@ -26,6 +29,7 @@ public class Harvester : Vehicle {
     }
 
     private void Collect() {
+        if(audioElement != null) audioElement.Play(harvestSound);
         float collect = collectionAmount * Time.deltaTime;
         if(currentLoad + collect > capacity) 
             collect = capacity - currentLoad;
@@ -34,6 +38,7 @@ public class Harvester : Vehicle {
     }
     
     private void Deposit() {
+        if(audioElement != null) audioElement.Play(emptyHarvestSound);
         currentDeposit += depositAmount * Time.deltaTime;
         int deposit = Mathf.FloorToInt(currentDeposit);
         if(deposit >= 1) {
@@ -122,6 +127,7 @@ public class Harvester : Vehicle {
  
 
     private void StartHarvest(Resource resource) {
+        if(audioElement != null) audioElement.Play(startHarvestSound);
         resourceDeposit = resource;
         StartMove(resource.transform.position, resource.gameObject);
         //we can only collect one resource at a time, other resources are lost
@@ -158,5 +164,23 @@ public class Harvester : Vehicle {
         SaveManager.WriteString(writer, "HarvestType", harvestType.ToString());
         if(resourceDeposit) SaveManager.WriteInt(writer, "ResourceDepositId", resourceDeposit.ObjectId);
         if(resourceStore) SaveManager.WriteInt(writer, "ResourceStoreId", resourceStore.ObjectId);
+    }
+    protected override void InitialiseAudio () {
+        base.InitialiseAudio ();
+        List< AudioClip > sounds = new List< AudioClip >();
+        List< float > volumes = new List< float >();
+        if(emptyHarvestVolume < 0.0f) emptyHarvestVolume = 0.0f;
+        if(emptyHarvestVolume > 1.0f) emptyHarvestVolume = 1.0f;
+        sounds.Add(emptyHarvestSound);
+        volumes.Add(emptyHarvestVolume);
+        if(harvestVolume < 0.0f) harvestVolume = 0.0f;
+        if(harvestVolume > 1.0f) harvestVolume = 1.0f;
+        sounds.Add(harvestSound);
+        volumes.Add (harvestVolume);
+        if(startHarvestVolume < 0.0f) startHarvestVolume = 0.0f;
+        if(startHarvestVolume > 1.0f) startHarvestVolume = 1.0f;
+        sounds.Add(startHarvestSound);
+        volumes.Add(startHarvestVolume);
+        audioElement.Add(sounds, volumes);
     }
 }

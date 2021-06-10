@@ -43,6 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b724d1c10542de4e986df3294e2c03e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clickSound: {fileID: 8300000, guid: 76a2bc0be66e8424a971fd5293bc9167, type: 3}
+  clickVolume: 1
   resourceSkin: {fileID: 11400000, guid: 051d6e1fad5fd564d8b6760db431eb37, type: 2}
   ordersSkin: {fileID: 11400000, guid: 8cfcf22077a734d499389cc816e4b8e3, type: 2}
   selectIcon: {fileID: 11400000, guid: 1f1769a4443366048a47f92628229839, type: 2}

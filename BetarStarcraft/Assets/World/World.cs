@@ -21,6 +21,12 @@ public class World : MonoBehaviour
     protected float healthPercentage = 1.0f;
     private List< Material > oldMaterials = new List< Material >();
     public int ObjectId { get; set; }
+    protected bool loadedSavedValues = false;
+    private int loadedTargetId = -1;
+    public AudioClip attackSound, selectSound, useWeaponSound;
+    public float attackVolume = 1.0f, selectVolume = 1.0f, useWeaponVolume = 1.0f;
+    
+    protected AudioElement audioElement;
 
     //attack stuff
     protected World target = null;
@@ -44,11 +50,12 @@ public class World : MonoBehaviour
     }
     
     protected virtual void Start () {
-        player = transform.root.GetComponentInChildren< Player >();
-        actions = new string[GameService.ACTION_LIMITS];
         SetPlayer();
-        if(player) 
+        if(player) {
             SetTeamColor();
+            if(loadedSavedValues && loadedTargetId >= 0) target = player.GetObjectForId(loadedTargetId);
+        }
+        InitialiseAudio();
     }
 
     protected void SetTeamColor() {
@@ -78,6 +85,7 @@ public class World : MonoBehaviour
     }
 
     public virtual void SetSelection(bool selected) {
+        if(audioElement != null) audioElement.Play(selectSound);
         currentlySelected = selected;
     }
 
@@ -272,6 +280,7 @@ public class World : MonoBehaviour
     }
 
     protected virtual void BeginAttack(World target) {
+        if(audioElement != null) audioElement.Play(attackSound);
         this.target = target;
         if(TargetInRange()) {
             attacking = true;
@@ -315,6 +324,7 @@ public class World : MonoBehaviour
     }
 
     protected virtual void UseWeapon() {
+        if(audioElement != null) audioElement.Play(useWeaponSound);
         currentWeaponChargeTime = 0.0f;
         //this behaviour needs to be specified by a specific object
     }
@@ -384,5 +394,59 @@ public class World : MonoBehaviour
             SaveManager.WriteFloat(writer, "CurrentWeaponChargeTime", currentWeaponChargeTime);
         }
         if(target != null) SaveManager.WriteInt(writer, "TargetId", target.ObjectId);
+    }
+
+    public void LoadDetails(JsonTextReader reader) {
+        while(reader.Read()) {
+            if(reader.Value != null) {
+                if(reader.TokenType == JsonToken.PropertyName) {
+                    string propertyName = (string)reader.Value;
+                    reader.Read();
+                    HandleLoadedProperty(reader, propertyName, reader.Value);
+                }
+            } else if(reader.TokenType == JsonToken.EndObject) {
+                selectionLimits = GameService.NotInBounds;
+                getLimits();
+                loadedSavedValues = true;
+                return;
+            }
+        }
+        selectionLimits = GameService.NotInBounds;
+        getLimits();
+        loadedSavedValues = true;
+    }
+
+    protected virtual void HandleLoadedProperty(JsonTextReader reader, string propertyName, object readValue) {
+        switch(propertyName) {
+            case "Name": objectName = (string)readValue; break;
+            case "Id": ObjectId = (int)(System.Int64)readValue; break;
+            case "Position": transform.localPosition = LoadManager.LoadVector(reader); break;
+            case "Rotation": transform.localRotation = LoadManager.LoadQuaternion(reader); break;
+            case "Scale": transform.localScale = LoadManager.LoadVector(reader); break;
+            case "HitPoints": hitPoints = (int)(System.Int64)readValue; break;
+            case "Attacking": attacking = (bool)readValue; break;
+            case "MovingIntoPosition": movingIntoPosition = (bool)readValue; break;
+            case "Aiming": aiming = (bool)readValue; break;
+            case "CurrentWeaponChargeTime": currentWeaponChargeTime = (float)(double)readValue; break;
+            case "TargetId": loadedTargetId = (int)(System.Int64)readValue; break;
+            default: break;
+        }
+    }
+    protected virtual void InitialiseAudio() {
+        List< AudioClip > sounds = new List< AudioClip >();
+        List< float > volumes = new List< float >();
+        if(attackVolume < 0.0f) attackVolume = 0.0f;
+        if(attackVolume > 1.0f) attackVolume = 1.0f;
+        sounds.Add(attackSound);
+        volumes.Add(attackVolume);
+        if(selectVolume < 0.0f) selectVolume = 0.0f;
+        if(selectVolume > 1.0f) selectVolume = 1.0f;
+        sounds.Add(selectSound);
+        volumes.Add(selectVolume);
+        if(useWeaponVolume < 0.0f) useWeaponVolume = 0.0f;
+        if(useWeaponVolume > 1.0f) useWeaponVolume = 1.0f;
+        sounds.Add(useWeaponSound);
+        volumes.Add(useWeaponVolume);
+        audioElement = new AudioElement(sounds, volumes, objectName + ObjectId, this.transform);
     }
 }

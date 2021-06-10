@@ -16,6 +16,10 @@ public class HUD : MonoBehaviour
     private const int SCROLL_BAR_WIDTH = 22;
     private const int SELECTION_NAME_HEIGHT = 15;
     private int buildAreaHeight = 0;
+    public AudioClip clickSound;
+    public float clickVolume = 1.0f;
+    
+    private AudioElement audioElement;
     //skinurile afisate pe ecran
     public GUISkin resourceSkin, ordersSkin, selectIcon, mouseSkin;
     public GUISkin playerDetailsSkin;
@@ -138,6 +142,11 @@ public class HUD : MonoBehaviour
             }
         }
         GameService.SetResourceHealthBarTextures(resourceHealthBarTextures);
+        List< AudioClip > sounds = new List< AudioClip >();
+        List< float > volumes = new List< float >();
+        sounds.Add(clickSound);
+        volumes.Add (clickVolume);
+        audioElement = new AudioElement(sounds, volumes, "HUD", null);
     }
 
     void getResourceTextures()
@@ -258,6 +267,7 @@ public class HUD : MonoBehaviour
             if(pauseMenu) pauseMenu.enabled = true;
             PlayerInput PlayerInput = player.GetComponent< PlayerInput >();
             if(PlayerInput) PlayerInput.enabled = false;
+            PlayClick();
         }
         GUI.EndGroup();
     }
@@ -304,8 +314,10 @@ public class HUD : MonoBehaviour
                 //create the button and handle the click of that button
                 //Debug.Log("adauga imaginea");
                 if(GUI.Button(pos, action)) {
-                    if(player.SelectedObject) 
+                    if(player.SelectedObject) {
                         player.SelectedObject.PerformAction(actions[i]);
+                        PlayClick();
+                    }
                 }
             }
         }
@@ -330,6 +342,7 @@ public class HUD : MonoBehaviour
 
         if(GUI.Button(new Rect(leftPos, topPos, width, height), building.sellImage)) {
             building.Sell();
+            PlayClick();
         }
 
         //Debug.Log("buton");
@@ -341,6 +354,7 @@ public class HUD : MonoBehaviour
             //SetCustomCursor();
             if(GUI.Button(new Rect(leftPos, topPos, width, height), building.rallyPointImage)) {
                 pressed = 1 - pressed;
+                PlayClick();
                 if(currentTexture != rallyPointCursor && previousCursorState != "flag") {
                     Debug.Log("schimba in flag");
                     GameService.changeCursor("flag");
@@ -384,5 +398,8 @@ public class HUD : MonoBehaviour
         playerDetailsSkin.GetStyle("label").CalcMinMaxWidth(new GUIContent(playerName), out minWidth, out maxWidth);
         GUI.Label(new Rect(leftPos, topPos, maxWidth, height), playerName);
         GUI.EndGroup();
+    }
+    private void PlayClick() {
+        if(audioElement != null) audioElement.Play(clickSound);
     }
 }

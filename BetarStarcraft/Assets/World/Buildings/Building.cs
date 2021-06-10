@@ -19,6 +19,8 @@ public class Building : World
     public int sellValue = 100;
     public Texture2D sellImage;
     public Texture2D rallyPointImage;
+    public AudioClip finishedJobSound;
+    public float finishedJobVolume = 1.0f;
 
     protected override void Awake() {
         base.Awake();
@@ -146,6 +148,7 @@ public class Building : World
         if (currentBuildProgress > maxBuildProgress) {
             Debug.Log("produce");
             if (player) {
+                if(audioElement != null) audioElement.Play(finishedJobSound);
                 player.AddUnit(buildQueue.Dequeue(), spawnPoint, flagPosition, transform.rotation, this);
                 UpdateSpawnPoint();
             }
@@ -205,5 +208,15 @@ public class Building : World
         SaveManager.WriteVector(writer, "RallyPoint", flagPosition);
         SaveManager.WriteFloat(writer, "BuildProgress", currentBuildProgress);
         SaveManager.WriteStringArray(writer, "BuildQueue", buildQueue.ToArray());
+    }
+    protected override void InitialiseAudio () {
+        base.InitialiseAudio ();
+        if(finishedJobVolume < 0.0f) finishedJobVolume = 0.0f;
+        if(finishedJobVolume > 1.0f) finishedJobVolume = 1.0f;
+        List< AudioClip > sounds = new List< AudioClip >();
+        List< float > volumes = new List< float >();
+        sounds.Add(finishedJobSound);
+        volumes.Add (finishedJobVolume);
+        audioElement.Add(sounds, volumes);
     }
 }

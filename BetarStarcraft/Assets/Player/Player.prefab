@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 4738665284967114745}
   - component: {fileID: 5573972623180116030}
   - component: {fileID: 3286057125724441216}
+  - component: {fileID: 4875257214869890768}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -190,6 +191,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mySkin: {fileID: 11400000, guid: fed870c2a07187242af7ee588e7aebe0, type: 2}
   header: {fileID: 2800000, guid: 31682f4569badca4c817870e1db0422a, type: 3}
+  clickSound: {fileID: 8300000, guid: 76a2bc0be66e8424a971fd5293bc9167, type: 3}
+  clickVolume: 1
 --- !u!114 &3286057125724441216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,6 +207,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mySkin: {fileID: 0}
   selectionSkin: {fileID: 0}
+  clickSound: {fileID: 8300000, guid: 76a2bc0be66e8424a971fd5293bc9167, type: 3}
+  clickVolume: 1
+--- !u!114 &4875257214869890768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4738665284967114726}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9620702b41e33545987a45afd5fb6cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainSkin: {fileID: 11400000, guid: fed870c2a07187242af7ee588e7aebe0, type: 2}
+  selectionSkin: {fileID: 11400000, guid: 6bee327167d61c64b927b7b5a1b75984, type: 2}
 --- !u!1 &4738665285451654085
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using RTS;
  
 public class SelectPlayerMenu : MonoBehaviour {
@@ -8,12 +9,24 @@ public class SelectPlayerMenu : MonoBehaviour {
     private string playerName = "NewPlayer";
     public Texture2D[] avatars;
     private int avatarIndex = -1;
+
+    public AudioClip clickSound;
+    public float clickVolume = 1.0f;
     
+    private AudioElement audioElement;
+        
     void Start(){
         PlayerManager.Load();
         if(avatars.Length > 0) avatarIndex = 0;
         PlayerManager.SetAvatarTextures(avatars);
         SelectionList.LoadEntries(PlayerManager.GetPlayerNames());
+        if(clickVolume < 0.0f) clickVolume = 0.0f;
+        if(clickVolume > 1.0f) clickVolume = 1.0f;
+        List< AudioClip > sounds = new List< AudioClip >();
+        List< float > volumes = new List< float >();
+        sounds.Add(clickSound);
+        volumes.Add (clickVolume);
+        audioElement = new AudioElement(sounds, volumes, "SelectPlayerMenu", null);
     }
 
     void OnGUI() {
@@ -35,10 +48,12 @@ public class SelectPlayerMenu : MonoBehaviour {
         if(SelectionList.MouseDoubleClick()) {
             playerName = SelectionList.GetCurrentEntry();
             SelectPlayer();
+            PlayClick();
         }
 
         if(GUI.Button(new Rect(leftPos, topPos, GameService.ButtonWidth, GameService.ButtonHeight), "Select")) {
             SelectPlayer();
+            PlayClick();
         }
         //text area for player to type new name
         float textTop = menuHeight - 2 * GameService.Padding - GameService.ButtonHeight - GameService.TextHeight;
@@ -56,10 +71,12 @@ public class SelectPlayerMenu : MonoBehaviour {
             if(GUI.Button(new Rect(buttonLeft, buttonTop, GameService.ButtonHeight, GameService.ButtonHeight), "<")) {
                 avatarIndex -= 1;
                 if(avatarIndex < 0) avatarIndex = avatars.Length - 1;
+                PlayClick();
             }
             buttonLeft = GameService.MenuWidth - GameService.Padding - GameService.ButtonHeight;
             if(GUI.Button(new Rect(buttonLeft, buttonTop, GameService.ButtonHeight, GameService.ButtonHeight), ">")) {
                 avatarIndex = (avatarIndex+1) % avatars.Length;
+                PlayClick();
             }
         }
        
@@ -95,5 +112,8 @@ public class SelectPlayerMenu : MonoBehaviour {
         GetComponent< SelectPlayerMenu >().enabled = false;
         MaineMenu main = GetComponent< MaineMenu >();
         if(main) main.enabled = true;
+    }
+    private void PlayClick() {
+        if(audioElement != null) audioElement.Play(clickSound);
     }
 }

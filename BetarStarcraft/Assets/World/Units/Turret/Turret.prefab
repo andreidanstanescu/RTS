@@ -592,15 +592,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 418ec556c806d3746b9e9ddb04e87484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Tureta
+  objectName: WorldObject
   image: {fileID: 2800000, guid: 51cf951bc25f68b41b8a374be921f682, type: 3}
   cost: 0
   hitPoints: 0
   maxHitPoints: 0
+  attackSound: {fileID: 8300000, guid: 4adf9ec953b9fad45ae4d4a8e4c44d8e, type: 3}
+  selectSound: {fileID: 8300000, guid: 5d5a5dc1d2d1899409854b1a40778756, type: 3}
+  useWeaponSound: {fileID: 8300000, guid: 7fcf9d5b93f73a04aad10eaa3d98ba51, type: 3}
+  attackVolume: 1
+  selectVolume: 1
+  useWeaponVolume: 1
   weaponRange: 10
   weaponRechargeTime: 1
   weaponAimSpeed: 1
   rotateSpeed: 2
+  driveSound: {fileID: 8300000, guid: f8ce007afeb3aa84fa2af2ffbf954fd2, type: 3}
+  moveSound: {fileID: 8300000, guid: 02dcbcdd0d7393d4d9ec9ac367017e40, type: 3}
+  driveVolume: 0.5
+  moveVolume: 1
 --- !u!222 &-7718021875091380196
 CanvasRenderer:
   m_ObjectHideFlags: 0

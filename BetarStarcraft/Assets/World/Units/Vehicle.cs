@@ -11,6 +11,8 @@ public class Vehicle : World
     private GameObject destinationTarget;
     private Quaternion targetRotation;
     protected bool moving, rotating;
+    public AudioClip driveSound, moveSound;
+    public float driveVolume = 0.5f, moveVolume = 1.0f;
     
 
     protected override void Awake() {
@@ -42,6 +44,7 @@ public class Vehicle : World
     }
 
     public virtual void StartMove(Vector3 destination){
+        if(audioElement != null) audioElement.Play (moveSound);
         this.destination = destination;
         destinationTarget = null;
         targetRotation = Quaternion.LookRotation (destination - transform.position);
@@ -56,7 +59,8 @@ public class Vehicle : World
 
 		Quaternion inverseTargetRotation = new Quaternion(-targetRotation.x, -targetRotation.y, -targetRotation.z, -targetRotation.w);
 		if(transform.rotation == targetRotation || transform.rotation == inverseTargetRotation) {
-			rotating = false;
+			if(audioElement != null) audioElement.Play(driveSound);
+            rotating = false;
 			moving = true;
 			if(destinationTarget) 
                 getLimits();
@@ -74,6 +78,7 @@ public class Vehicle : World
         movingIntoPosition = false;
         transform.position = Vector3.MoveTowards(transform.position, destination, Time.deltaTime * GameService.getSpeedMovement);
         if(transform.position == destination) {
+            if(audioElement != null) audioElement.Play(driveSound);
             moving = false;
             movingIntoPosition = false;
         }
@@ -195,6 +200,20 @@ public class Vehicle : World
             World destinationObject = destinationTarget.GetComponent< World >();
             if(destinationObject) SaveManager.WriteInt(writer, "DestinationTargetId", destinationObject.ObjectId);
         }
+    }
+    protected override void InitialiseAudio () {
+        base.InitialiseAudio ();
+        List< AudioClip > sounds = new List< AudioClip >();
+        List< float > volumes = new List< float >();
+        if(driveVolume < 0.0f) driveVolume = 0.0f;
+        if(driveVolume > 1.0f) driveVolume = 1.0f;
+        volumes.Add(driveVolume);
+        sounds.Add(driveSound);
+        if(moveVolume < 0.0f) moveVolume = 0.0f;
+        if(moveVolume > 1.0f) moveVolume = 1.0f; 
+        sounds.Add(moveSound);
+        volumes.Add(moveVolume);
+        audioElement.Add(sounds, volumes);
     }
         
 }

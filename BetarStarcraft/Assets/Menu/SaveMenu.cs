@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using RTS;
  
 public class SaveMenu : MonoBehaviour {
@@ -7,9 +8,21 @@ public class SaveMenu : MonoBehaviour {
      
     private string saveName = "NewGame";
     private ConfirmDialog confirmDialog = new ConfirmDialog();
+
+    public AudioClip clickSound;
+    public float clickVolume = 1.0f;
+    
+    private AudioElement audioElement;
      
     void Start () {
         Activate();
+        if(clickVolume < 0.0f) clickVolume = 0.0f;
+        if(clickVolume > 1.0f) clickVolume = 1.0f;
+        List< AudioClip > sounds = new List< AudioClip >();
+        List< float > volumes = new List< float >();
+        sounds.Add(clickSound);
+        volumes.Add (clickVolume);
+        audioElement = new AudioElement(sounds, volumes, "SaveMenu", null);
     }
      
     void Update () {
@@ -32,6 +45,7 @@ public class SaveMenu : MonoBehaviour {
             confirmDialog.EndConfirmation();
         } else {
             if(SelectionList.MouseDoubleClick()) {
+                PlayClick();
                 saveName = SelectionList.GetCurrentEntry();
                 StartSave();
             }
@@ -60,10 +74,12 @@ public class SaveMenu : MonoBehaviour {
         float leftPos = GameService.Padding;
         float topPos = menuHeight - GameService.Padding - GameService.ButtonHeight;
         if(GUI.Button(new Rect(leftPos, topPos, GameService.ButtonWidth, GameService.ButtonHeight), "Save Game")) {
+            PlayClick();
             StartSave();
         }
         leftPos += GameService.ButtonWidth + GameService.Padding;
         if(GUI.Button(new Rect(leftPos, topPos, GameService.ButtonWidth, GameService.ButtonHeight), "Cancel")) {
+            PlayClick();
             CancelSave();
         }
         //text area for player to type new name
@@ -94,8 +110,7 @@ public class SaveMenu : MonoBehaviour {
     }
      
     private void StartSave() {
-        //prompt for override of name if necessary
-        if(SelectionList.Contains(saveName)) confirmDialog.StartConfirmation();
+        if(SelectionList.Contains(saveName)) confirmDialog.StartConfirmation(clickSound, audioElement);
         else SaveGame();
     }
 
@@ -111,5 +126,8 @@ public class SaveMenu : MonoBehaviour {
         GetComponent< SaveMenu >().enabled = false;
         PauseMenu pause = GetComponent< PauseMenu >();
         if(pause) pause.enabled = true;
+    }
+    private void PlayClick() {
+        if(audioElement != null) audioElement.Play(clickSound);
     }
 }

@@ -166,4 +166,13 @@ public class Player : MonoBehaviour
         SaveManager.SavePlayerBuildings(writer, GetComponentsInChildren< Building >());
         SaveManager.SavePlayerUnits(writer, GetComponentsInChildren< Vehicle >());
     }
+
+    public World GetObjectForId(int id) {
+        World[] objects = GameObject.FindObjectsOfType(typeof(World)) as World[];
+        foreach(World obj in objects) {
+            if(obj.ObjectId == id) return obj;
+        }
+        return null;
+    }
+
 }

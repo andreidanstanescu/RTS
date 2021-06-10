@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Test_units.unity
     guid: 7b16b25d0e70b834e8d2cc3cb60c8bb6
+  - enabled: 1
+    path: Assets/BlankMap1.unity
+    guid: 55f821f9c82e87246bb7cda54c7408c1
+  - enabled: 1
+    path: Assets/BlankMap2.unity
+    guid: 13cc40ec9b8d460438fbb5497f50823d
   m_configObjects: {}
