@@ -1,4 +1,4 @@
-Ne propunem sa implementam un joc de tip Real Time Strategy, similar cu Starcraft, dar cu nivel minimal de functionalitati.
+Ne propunem sa implementam un joc de tip Real Time Strategy, similar cu Starcraft, dar cu obiecte si grafica create de noi de la zero.
 Il vom implementa in Unity, folosind tehnologiile oferite de acest Engine, in limbajul C#.
 
 Am reușit să implementăm funcționalitățile jocului, cu structură specifică RTS (Real Time Strategy) la un nivel minimalist. 
