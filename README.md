@@ -17,13 +17,15 @@ Am reușit să implementăm funcționalitățile jocului, cu structură specific
 <a href="https://github.com/andreidanstanescu/RTS/tree/main/BetarStarcraft/Assets/Tests">Tests_2</a>
 <img src="https://i.imgur.com/wy6jP4p.png">
 
-<b>Bug reporting:</b> <a href="https://github.com/andreidanstanescu/RTS/issues"></a>
+<b>Bug reporting:</b> <a href="https://github.com/andreidanstanescu/RTS/issues">Bugs</a>
 
 <b>Build tool:</b> Unity
 
 <b>Design patterns:</b> Singleton, MVC, Command
 
 <b>Code standards:</b> Fișier .cs pentru fiecare clasă/unitate, standardul Unity pentru a crea obiecte la runtime (prefabs).
+
+<b>Refactoring:</b> Am rescris clasele HUD și cele de interacțiune pentru combat system, după ce ne-am asigurat că rulează jocul pentru claritatea codului.
 
 
 
