@@ -3,7 +3,7 @@ using System.Collections;
  
 public class Survival : VictoryCondition {
      
-    public int minutes = 1;
+    public int minutes = 5;
      
     private float timeLeft = 0.0f;
      

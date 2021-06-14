@@ -109,6 +109,11 @@ public class Vehicle : World
         }
     }
 
+    protected override bool ShouldMakeDecision () {
+        if(moving || rotating) return false;
+        return base.ShouldMakeDecision();
+    }
+
     public void StartMove(Vector3 destination, GameObject destinationTarget) {
         StartMove(destination);
         this.destinationTarget = destinationTarget;

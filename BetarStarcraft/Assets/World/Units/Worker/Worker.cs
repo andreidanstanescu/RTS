@@ -57,6 +57,29 @@ public class Worker : Vehicle
         CreateBuilding(actionToPerform);
     }
 
+    protected override bool ShouldMakeDecision () {
+        if(building) return false;
+        return base.ShouldMakeDecision();
+    }
+
+    protected override void DecideWhatToDo () {
+        base.DecideWhatToDo ();
+        List< World > buildings = new List< World >();
+        foreach(World nearbyObject in nearbyObjects) {
+            if(nearbyObject.GetPlayer() != player) continue;
+            Building nearbyBuilding = nearbyObject.GetComponent< Building> ();
+            if(nearbyBuilding && nearbyBuilding.UnderConstruction()) {
+                buildings.Add(nearbyObject);
+                //Debug.Log(nearbyObject.name);
+            }
+        }
+        World nearestObject = GameService.FindNearestWorldObjectInListToPosition(buildings, transform.position);
+        if(nearestObject) {
+            Building closestBuilding = nearestObject.GetComponent< Building >();
+            if(closestBuilding) SetBuilding(closestBuilding);
+        }
+    }
+
     public override void StartMove(Vector3 destination)
     {
         base.StartMove(destination);

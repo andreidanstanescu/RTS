@@ -39,6 +39,11 @@ public class World : MonoBehaviour
     public float weaponAimSpeed = 1.0f;
     //
 
+    //for AI
+    private float timeSinceLastDecision = 0.0f, timeBetweenDecisions = 0.1f;
+    public float detectionRange = 20.0f;
+    protected List< World > nearbyObjects;
+
     // protected virtual = cuvant cheie pentru mostenire
 
     //Awake este o functie mostenita din MonoBehaviour
@@ -67,18 +72,53 @@ public class World : MonoBehaviour
     }
     
     protected virtual void Update () {
+        if(ShouldMakeDecision()) 
+            DecideWhatToDo();
         currentWeaponChargeTime += Time.deltaTime;
         if(attacking && !movingIntoPosition && !aiming)
             PerformAttack();
     }
-    
+
+    protected virtual bool ShouldMakeDecision() {
+        if(!attacking && !movingIntoPosition && !aiming) {
+            //obiectul sta degeaba momentan
+            if(timeSinceLastDecision > timeBetweenDecisions) {
+                timeSinceLastDecision = 0.0f;
+                return true;
+            }
+            timeSinceLastDecision += Time.deltaTime;
+        }
+        return false;
+    }
+
+    protected virtual void DecideWhatToDo() {
+        //vreau sa interactioneze cu obiectele din range
+        Vector3 currentPosition = transform.position;
+        nearbyObjects = GameService.FindNearbyObjects(currentPosition, detectionRange);
+        if(CanAttack()) {
+            List< World > enemyObjects = new List< World >();
+            foreach(World nearbyObject in nearbyObjects) {
+                Resource resource = nearbyObject.GetComponent< Resource >();
+                if(resource) continue;
+                if(nearbyObject.GetPlayer() != player) enemyObjects.Add(nearbyObject);
+            }
+            World closestObject = GameService.FindNearestWorldObjectInListToPosition(enemyObjects, currentPosition);
+            if(closestObject) 
+                BeginAttack(closestObject);
+        }
+    }
+
+    public Player GetPlayer() {
+        return player;
+    }
+ 
     public void SetPlayer() {
         player = transform.root.GetComponentInChildren< Player >();
     }
 
     //update de fiecare data cand il selectez
     protected virtual void OnGUI() {
-        if(currentlySelected){
+        if(currentlySelected && !GameService.MenuOpen){
             //Debug.Log("selectat obiect din lume");
             DrawWorldObject();
         }
@@ -130,7 +170,7 @@ public class World : MonoBehaviour
                     if(player && player.is_player) { //this object is controlled by a human player
                         //start attack if object is not owned by the same player and this object can attack, else select
                         if(player.battletag != owner.battletag && CanAttack()) {
-                            Debug.Log("ataca cladirea");
+                            //Debug.Log("ataca cladirea");
                             BeginAttack(worldObject);
                         }
                         //daca nu, atunci player-ul din parametru selecteaza normal obiectul acesta in locul celui curent
@@ -230,17 +270,17 @@ public class World : MonoBehaviour
              World worldObject = hitObject.transform.parent.GetComponent< World >();
             //clicked on another selectable object
             if(worldObject) {
-                Debug.Log(worldObject.name);
+                //Debug.Log(worldObject.name);
                 Resource resource = hitObject.transform.parent.GetComponent< Resource >();
                 if(resource && resource.isEmpty()) 
                     return;
                 Player owner = hitObject.transform.root.GetComponent< Player >();
                 if(owner) { //the object is controlled by a player
-                    Debug.Log(owner.battletag);
+                    //Debug.Log(owner.battletag);
                     if(player && player.is_player) { //this object is controlled by a human player
                         //start attack if object is not owned by the same player and this object can attack, else select
                         if(player.battletag != owner.battletag && CanAttack()) {
-                            Debug.Log("ataca cladirea");
+                            //Debug.Log("ataca cladirea");
                             BeginAttack(worldObject);
                         }
                         //daca nu, atunci player-ul din parametru selecteaza normal obiectul acesta in locul celui curent
@@ -282,7 +322,10 @@ public class World : MonoBehaviour
     protected virtual void BeginAttack(World target) {
         if(audioElement != null) audioElement.Play(attackSound);
         this.target = target;
+        //if(!player.is_player)
+            //Debug.Log(target.name);
         if(TargetInRange()) {
+            //Debug.Log("in range");
             attacking = true;
             PerformAttack();
         } 
@@ -295,10 +338,12 @@ public class World : MonoBehaviour
             attacking = false;
             return;
         }
+        //if(!player.is_player)
+        //    Debug.Log(TargetInFrontOfWeapon());
         if(!TargetInRange()) 
             AdjustPosition();
-        else if(!TargetInFrontOfWeapon())  
-            AimAtTarget();
+        //else if(!TargetInFrontOfWeapon())  
+        //    AimAtTarget();
         else if(ReadyToFire()) 
             UseWeapon();
     }

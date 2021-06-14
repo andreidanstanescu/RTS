@@ -62,7 +62,7 @@ public class Building : World
                 //Debug.Log(player.is_player);
                 if(flag && player.is_player && spawnPoint != GameService.OutOfBounds && flagPosition != GameService.OutOfBounds) {
                     
-                    Debug.Log(flagPosition.z);
+                    //Debug.Log(flagPosition.z);
                     //flag.transform.position = Camera.main.WorldToScreenPoint(flagPosition);
                     flag.transform.position = flagPosition;
                     flag.transform.forward = transform.forward;

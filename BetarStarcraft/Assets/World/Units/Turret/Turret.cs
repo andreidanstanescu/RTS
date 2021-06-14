@@ -18,6 +18,7 @@ public class Turret : Vehicle
     {
         base.Update();
         if(aiming) {
+            //Debug.Log(target.name);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, target.transform.rotation, weaponAimSpeed);
             getLimits();
             //sometimes it gets stuck exactly 180 degrees out in the calculation and does nothing, this check fixes that
@@ -30,6 +31,8 @@ public class Turret : Vehicle
 
     protected override void UseWeapon () {
         base.UseWeapon();
+        //if(!player.is_player)
+        //    Debug.Log("ataca cu arma");
         Vector3 spawnPoint = transform.position;
         spawnPoint.x += (2.1f * transform.forward.x);
         spawnPoint.y += 3.5f;
@@ -49,7 +52,10 @@ public class Turret : Vehicle
     protected override void AimAtTarget () {
         base.AimAtTarget();
         aimRotation = Quaternion.LookRotation(target.transform.position - transform.position);
+        //if(!player.is_player)
+        //    Debug.Log("aimeste");
     }
+
     public override void SaveDetails (JsonWriter writer) {
         base.SaveDetails (writer);
         SaveManager.WriteQuaternion(writer, "AimRotation", aimRotation);

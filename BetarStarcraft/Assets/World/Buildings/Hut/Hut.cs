@@ -27,4 +27,9 @@ public class Hut : Building
         CreateUnit(actionToPerform);
         //Debug.Log(buildQueue.Count);
     }
+
+    protected override bool ShouldMakeDecision () {
+        return false;
+    }
+    
 }

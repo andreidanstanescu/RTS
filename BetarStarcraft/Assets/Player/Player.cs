@@ -48,6 +48,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    public int getResurse(string type) {
+        return resurse[type];
+    }
+
     // Update is called once per frame
     void Update()
     {

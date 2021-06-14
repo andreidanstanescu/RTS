@@ -10,7 +10,7 @@ namespace RTS {
     public sealed class GameService {
 
         private GameService(){
-
+            //Salut domnule stanescu????
         }
 
         private static readonly object padlock = new object();  
@@ -263,5 +263,60 @@ namespace RTS {
             if(loader) return loader.GetNewObjectId();
             return -1;
         } 
+
+        //for AI
+        public static List< World > FindNearbyObjects(Vector3 pos, float range) {
+            //functie din framework care stie sa gaseasca obiectele din jur
+            Collider[] inRangeObjects = Physics.OverlapSphere(pos, range);
+            //ma folosesc de un hash simplu ca sa nu am obiecte duplicate
+            //de exemplu, 2 unitati detectate de unity ca fiind diferite, dar care fac parte din aceeasi cladire
+            HashSet< int > nearbyObjectIds = new HashSet< int >();
+            List< World > nearbyObjects = new List< World >();
+            for(int i = 0; i < inRangeObjects.Length; i++) {
+                Transform parent = inRangeObjects[i].transform.parent;
+                //Debug.Log(parent.name);
+                if(parent) {
+                    //Debug.Log(parent.name);
+                    World parentObject = parent.GetComponent(typeof(World)) as World;
+                    if(parent.name == "Harvester" || parent.name == "Worker" || parent.name == "Hut"){
+                        //Debug.Log(parentObject.name);
+                        nearbyObjectIds.Add(parentObject.ObjectId);
+                        nearbyObjects.Add(parentObject);
+                        continue;
+                    }
+                    //daca dau debug face asta la fiecare frame -> devine f lent -> nu face jocul nimic
+                    //Debug.Log(parentObject.name);
+                    if(parentObject && !nearbyObjectIds.Contains(parentObject.ObjectId)) {
+                        //Debug.Log(parentObject.name);
+                        nearbyObjectIds.Add(parentObject.ObjectId);
+                        nearbyObjects.Add(parentObject);
+                    }
+                }
+            }
+            //for(int i = 0; i < nearbyObjects.Count; i++)
+            //    Debug.Log(nearbyObjects[i].name);
+            return nearbyObjects;
+        }
+
+        public static World FindNearestWorldObjectInListToPosition(List< World > objects, Vector3 position) {
+            if(objects == null || objects.Count == 0) return null;
+            World nearestObject = objects[0];
+            //Debug.Log(objects[0].name);
+            float dmin = Vector3.SqrMagnitude(position - nearestObject.transform.position);
+            //Debug.Log(dmin);
+            for(int i = 1; i < objects.Count; i++) {
+                float distanceToObject = Vector3.SqrMagnitude(position - objects[i].transform.position);
+                //Debug.Log(objects[i].name);
+                //Debug.Log(distanceToObject);
+                if(distanceToObject < dmin) {
+                    dmin = distanceToObject;
+                    nearestObject = objects[i];
+                }
+            }
+            //Debug.Log(nearestObject.name);
+            return nearestObject;
+        }
+
     }
+
 }

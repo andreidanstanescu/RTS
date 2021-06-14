@@ -23,6 +23,11 @@ public class Harvester : Vehicle {
         //Debug.Log(resourceStore.name);
     }
 
+    protected override bool ShouldMakeDecision () {
+        if(harvesting || emptying) return false;
+        return base.ShouldMakeDecision();
+    }
+
     public override void SetBuilding(Building creator) {
         base.SetBuilding(creator);
         resourceStore = creator;
