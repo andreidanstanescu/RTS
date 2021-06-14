@@ -3,8 +3,30 @@ Il vom implementa in Unity, folosind tehnologiile oferite de acest Engine, in li
 
 Am reușit să implementăm funcționalitățile jocului, cu structură specifică RTS (Real Time Strategy) la un nivel minimalist. 
 
-<img src="https://discord.com/channels/823575212913590352/823575212913590356/854027326772871239">
+<img src="https://i.imgur.com/r3EjB83.png">
 
-<h1> BAREM </h1>
+<h1> Barem </h1>
+
+<b>Backlog se regăsește aici:</b> <a href="https://github.com/andreidanstanescu/RTS/projects">Backlog</a>
+
+<b>Diagrama UML cu clase:</b> <a href="https://github.com/andreidanstanescu/RTS/blob/main/diagUML_class.jpg">UML</a>
+
+<b>Source control:</b> <a href="https://github.com/andreidanstanescu/RTS/commits/main">UML</a>
+
+<b>Unit test:</b> <a href="https://github.com/andreidanstanescu/RTS/tree/main/BetarStarcraft/Assets/RTS/Tests_RTS">Tests_1</a>
+<a href="https://github.com/andreidanstanescu/RTS/tree/main/BetarStarcraft/Assets/Tests">Tests_2</a>
+<img src="https://i.imgur.com/wy6jP4p.png">
+
+<b>Bug reporting:</b> <a href="https://github.com/andreidanstanescu/RTS/issues"></a>
+
+<b>Build tool:</b> Unity
+
+<b>Design patterns:</b> Singleton, MVC, Command
+
+<b>Code standards:</b> Fișier .cs pentru fiecare clasă/unitate, standardul Unity pentru a crea obiecte la runtime (prefabs).
+
+
+
+
 
 
