@@ -11,7 +11,7 @@ Am reușit să implementăm funcționalitățile jocului, cu structură specific
 
 <b>Diagrama UML cu clase:</b> <a href="https://github.com/andreidanstanescu/RTS/blob/main/diagUML_class.jpg">UML</a>
 
-<b>Source control:</b> <a href="https://github.com/andreidanstanescu/RTS/commits/main">UML</a>
+<b>Source control:</b> <a href="https://github.com/andreidanstanescu/RTS/commits/main">Commits</a>
 
 <b>Unit test:</b> <a href="https://github.com/andreidanstanescu/RTS/tree/main/BetarStarcraft/Assets/RTS/Tests_RTS">Tests_1</a>
 <a href="https://github.com/andreidanstanescu/RTS/tree/main/BetarStarcraft/Assets/Tests">Tests_2</a>
